@@ -1,0 +1,37 @@
+import {Button, VerticalBox } from "sixtyfps_widgets.60";
+
+Tile := Rectangle { 
+    callback dump_info(float, float, float, float);
+    // width: 60px;
+    // height: 60px; 
+    background: blue;
+    border-color: black;
+    border-width: 1px;
+
+    // Get parent.x - which is Rectangle, otherwise will get coordinates of TouchArea
+    TouchArea { clicked => { dump_info(parent.x/1phx, parent.y/1phx, parent.width/1phx, parent.height/1phx); }  }
+}
+MainWindow := Window{
+    callback dump_element_info(float, float, float, float);
+
+    VerticalLayout { 
+        VerticalLayout { 
+            width: 296phx;
+            height: 128phx;
+
+            HorizontalLayout { 
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+            }
+            HorizontalLayout {
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+                Tile { dump-info(x, y, w, h) => { dump-element-info(x, y, w, h) }}
+            }
+         }
+        
+     }
+}
