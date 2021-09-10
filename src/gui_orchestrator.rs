@@ -1,3 +1,5 @@
+use std::{fs::File, io::Write, iter::FromIterator, path::{Path, PathBuf}};
+
 #[derive(Debug, Default)]
 pub struct Tile {
     x: usize,
@@ -159,7 +161,26 @@ pub fn render_to_60fps(root: &Node, d: &Dimension) -> String{
 
     println!("Rendered:\n {}", result);
 
+    write_to_file(&result, "ui/main.60");
     result
+}
+
+fn write_to_file(gui :&String, path: &str) {
+    let full_path = PathBuf::from_iter([env!("CARGO_MANIFEST_DIR"), path]);
+    let path = Path::new(&full_path);
+    
+    let display = path.display();
+
+    // Open a file in write-only mode, returns `io::Result<File>`
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}: {}", display, why),
+        Ok(file) => file,
+    };
+
+    match file.write_all(gui.as_bytes()) {
+        Err(why) => panic!("couldn't write to {}: {}", display, why),
+        Ok(_) => println!("successfully wrote to {}", display),
+    }
 }
 
 #[cfg(test)]
@@ -175,6 +196,31 @@ mod test {
             h_layout([
                 tile("E"),
                 h_layout([tile("F"), v_layout([tile("G"), tile("H")])]),
+            ]),
+        ]);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+    }
+
+    #[test]
+    fn bc_welcome() {
+        let mut gui = v_layout([
+            h_layout([
+                v_layout([tile("02/09/21"), tile("19:34:20")]),
+                v_layout([tile("in view/tracked"), tile("15/6")]),
+            ]),
+            h_layout([
+                v_layout([tile("23.19[*C]"), tile("33.94[m]")]),
+                v_layout([tile("Hit button below"), tile("to calculate your"), tile("BMI"),])
             ]),
         ]);
 
