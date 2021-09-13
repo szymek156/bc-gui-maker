@@ -2,9 +2,10 @@ use std::{
     fs::File,
     io::Write,
     iter::FromIterator,
-    os::linux::raw::stat,
     path::{Path, PathBuf},
 };
+
+use regex::{Regex, RegexBuilder};
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Dimension {
@@ -97,16 +98,16 @@ pub fn tile(name: &'static str) -> Node {
 pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
     match root {
         Node::V(nodes) => {
-            // Get number of elements which are NOT h_lines
+            // Get number of elements which are NOT {h,v}_lines
             let len = nodes
                 .iter()
                 .filter(|e| match e.as_ref() {
-                    Node::HorizontalLine(_) => false,
+                    Node::HorizontalLine(_) | Node::VerticalLine(_) => false,
                     _ => true,
                 })
                 .count();
 
-            // Split area evenly by nodes which are NOT h_lines
+            // Split area evenly by nodes which are NOT {h,v}_lines
             let height = d.height / len;
 
             let mut h_lines_count = 0;
@@ -115,7 +116,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 .iter_mut()
                 .enumerate()
                 .map(|(idx, node)| {
-                    // H lines overlap on other widgets,
+                    // H or V lines overlap on other widgets,
                     // so each time h_line is present we substract
                     // the idx, so widget goes to the place under
                     // the h_line
@@ -134,9 +135,15 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
 
                     let idx = idx - h_lines_count;
 
+                    // In vertical layout x coord for v_lines must be corrected
+                    let mut x = d.x;
                     match node.as_ref() {
                         Node::HorizontalLine(_) => {
                             h_lines_count += 1;
+                        }
+                        Node::VerticalLine(_) => {
+                            h_lines_count += 1;
+                            x = d.x + d.width / 2;
                         }
                         _ => (),
                     };
@@ -146,6 +153,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                         &Dimension {
                             y: d.y + idx * height,
                             height,
+                            x: x,
                             ..*d
                         },
                     )
@@ -153,17 +161,51 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 .collect();
         }
         Node::H(nodes) => {
-            let len = nodes.len();
+            // Get number of elements which are NOT {h,v}_lines
+            let len = nodes
+                .iter()
+                .filter(|e| match e.as_ref() {
+                    Node::HorizontalLine(_) | Node::VerticalLine(_) => false,
+                    _ => true,
+                })
+                .count();
+
+            // Split area evenly by nodes which are NOT {h,v}_lines
             let width = d.width / len;
+
+            let mut h_lines_count = 0;
+
             let _: Vec<_> = nodes
                 .iter_mut()
                 .enumerate()
                 .map(|(idx, node)| {
+                    let idx = idx - h_lines_count;
+
+                    let mut y = d.y;
+                    match node.as_ref() {
+                        Node::HorizontalLine(_) => {
+                            h_lines_count += 1;
+                            y = d.y + d.height / 2;
+                        }
+                        Node::VerticalLine(_) => {
+                            h_lines_count += 1;
+                        }
+                        _ => (),
+                    };
+
+                    // match node.as_ref() {
+                    //     Node::HorizontalLine(_) | Node::VerticalLine(_) => {
+                    //         h_lines_count += 1;
+                    //     }
+                    //     _ => (),
+                    // };
+
                     invalidate_dimensions(
                         node,
                         &Dimension {
                             x: d.x + idx * width,
                             width,
+                            y: y,
                             ..*d
                         },
                     )
@@ -202,7 +244,13 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
             dim.width = d.width - 2 * MARGIN;
             dim.height = 1;
         }
-        Node::VerticalLine(dim) => todo!(),
+        Node::VerticalLine(dim) => {
+            const MARGIN: usize = 3;
+            dim.x = d.x;
+            dim.y = d.y + MARGIN;
+            dim.width = 1;
+            dim.height = d.height - 2 * MARGIN;
+        }
     }
 }
 
@@ -227,24 +275,28 @@ fn render_widgets(root: &Node) -> (String, String) {
         }
 
         Node::Leaf(tile) => {
-            let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            // Need to escape n, and a \, hence 4x \
+            let re = Regex::new("\\\\n").unwrap();
+            let lines = 1.0 + re.find_iter(tile.name).count() as f64;
+
+            let font_size = ((tile.dim.width.min(tile.dim.height) as f64 * 0.75) / lines) as usize;
             (
                 format!(
                     r#"Rectangle {{
             x: {x}px;
-            y: {y}px; 
+            y: {y}px;
             width: {width}px;
-            height: {height}px; 
+            height: {height}px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {{
                 width: 100%;
-                height: 100%; 
-                text: "{name}"; 
-                font-size: {font_size}px; 
-                vertical-alignment: center; 
-                horizontal-alignment: center;                     
+                height: 100%;
+                text: "{name}";
+                font-size: {font_size}px;
+                vertical-alignment: center;
+                horizontal-alignment: center;
             }}
         }}
         "#,
@@ -258,14 +310,14 @@ fn render_widgets(root: &Node) -> (String, String) {
                 String::default(),
             )
         }
-        Node::HorizontalLine(dim) => (
+        Node::HorizontalLine(dim) | Node::VerticalLine(dim) => (
             String::default(),
             format!(
                 r#"Rectangle {{
             x: {x}px;
-            y: {y}px; 
+            y: {y}px;
             width: {width}px;
-            height: {height}px; 
+            height: {height}px;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -277,7 +329,6 @@ fn render_widgets(root: &Node) -> (String, String) {
                 height = dim.height,
             ),
         ),
-        Node::VerticalLine(_) => todo!(),
     }
 }
 
@@ -312,17 +363,15 @@ fn write_to_file(gui: &String, path: &str) {
     let full_path = PathBuf::from_iter([env!("CARGO_MANIFEST_DIR"), path]);
     let path = Path::new(&full_path);
 
-    let display = path.display();
-
     // Open a file in write-only mode, returns `io::Result<File>`
     let mut file = match File::create(&path) {
-        Err(why) => panic!("couldn't create {}: {}", display, why),
+        Err(why) => panic!("couldn't create {:?}: {}", path, why),
         Ok(file) => file,
     };
 
     match file.write_all(gui.as_bytes()) {
-        Err(why) => panic!("couldn't write to {}: {}", display, why),
-        Ok(_) => println!("successfully wrote to {}", display),
+        Err(why) => panic!("couldn't write to {:?}: {}", path, why),
+        Ok(_) => println!("successfully wrote to {:?}", path),
     }
 }
 
@@ -355,23 +404,91 @@ mod test {
     }
 
     #[test]
+    fn v_layout_with_h_layouts_splits_them_via_v_lines() {
+        // V:
+        //   H: A | B
+        //   H: C | D
+        let mut gui = v_layout([
+            v_line(), // splits A | B
+            h_layout([tile("A"), tile("B")]),
+
+            v_line(), // splits C | D
+            h_layout([
+                tile("C"), tile("D"),
+                ]),
+        ]);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+    }
+
+    #[test]
+    fn h_layout_with_v_layouts_splits_them_via_h_lines() {
+        // H: V: A  V: C
+        //       --    --
+        //       B ,   D
+        let mut gui = h_layout([
+            h_line(),
+            // splits
+            // A
+            // --
+            // B
+            v_layout([tile("A"), tile("B")]),
+
+            h_line(),
+            // splits
+            // C
+            // --
+            // D
+            v_layout([
+                tile("C"), tile("D"),
+                ]),
+        ]);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+    }
+
+    #[test]
     fn bc_welcome() {
-        let status_bar = h_layout([tile("status bar")]);
+        let status_bar = h_layout([
+            tile("21:37"),
+            v_line(),
+            tile("GPS 3D"),
+            v_line(),
+            tile("69%"),
+        ]);
         let welcome_page = v_layout([
             h_line(),
+            v_line(),
             h_layout([
                 v_layout([tile("02/09/21"), tile("19:34:20")]),
-                v_layout([tile("in view/tracked"), tile("15/6")]),
+                v_layout([tile("in view"), tile("15/6")]),
             ]),
-            // v_line(),
+            // Current implementation of invalidate_dimensions
+            // makes {h,v}_line split tiles defined after them
+            // so they 'stick' to the bottom
             h_line(),
+            v_line(),
             h_layout([
                 v_layout([tile("23.19[*C]"), tile("33.94[m]")]),
-                v_layout([
-                    tile("Hit button below"),
-                    tile("to calculate your"),
-                    tile("BMI"),
-                ]),
+                v_layout([tile(r#"Hit button below\nto calculate your\nBMI"#)]),
             ]),
         ]);
 
