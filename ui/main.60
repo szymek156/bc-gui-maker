@@ -1,160 +1,198 @@
 MainWindow := Window{
         width: 296phx;
         height: 128phx;
+        background: green;
 
         Rectangle {
-                x: 0px;
-                y: 0px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "02/09/21"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+            x: 0px;
+            y: 0px; 
+            width: 296px;
+            height: 19px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "status bar"; 
+                font-size: 14px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 0px;
-                y: 32px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "19:34:20"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 0px;
+            y: 19px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "02/09/21"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 148px;
-                y: 0px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "in view/tracked"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 0px;
+            y: 46px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "19:34:20"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 148px;
-                y: 32px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "15/6"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 148px;
+            y: 19px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "in view/tracked"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 0px;
-                y: 64px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "23.19[*C]"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 148px;
+            y: 46px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "15/6"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 0px;
-                y: 96px; 
-                width: 148px;
-                height: 32px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "33.94[m]"; 
-                    font-size: 27px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 0px;
+            y: 73px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "23.19[*C]"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 148px;
-                y: 64px; 
-                width: 148px;
-                height: 21px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "Hit button below"; 
-                    font-size: 17px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 0px;
+            y: 100px; 
+            width: 148px;
+            height: 27px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "33.94[m]"; 
+                font-size: 20px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 148px;
-                y: 85px; 
-                width: 148px;
-                height: 21px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "to calculate your"; 
-                    font-size: 17px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 148px;
+            y: 73px; 
+            width: 148px;
+            height: 18px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "Hit button below"; 
+                font-size: 13px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            Rectangle {
-                x: 148px;
-                y: 106px; 
-                width: 148px;
-                height: 21px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {
-                    width: 100%;
-                    height: 100%; 
-                    text: "BMI"; 
-                    font-size: 17px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }
+        }
+        Rectangle {
+            x: 148px;
+            y: 91px; 
+            width: 148px;
+            height: 18px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "to calculate your"; 
+                font-size: 13px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }
-            
+        }
+        Rectangle {
+            x: 148px;
+            y: 109px; 
+            width: 148px;
+            height: 18px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                width: 100%;
+                height: 100%; 
+                text: "BMI"; 
+                font-size: 13px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
+            }
+        }
+        
+
+        Rectangle {
+            x: 13px;
+            y: 19px; 
+            width: 270px;
+            height: 1px; 
+            background: black;
+            border-color: black;
+            border-width: 0px;
+        }
+        Rectangle {
+            x: 13px;
+            y: 73px; 
+            width: 270px;
+            height: 1px; 
+            background: black;
+            border-color: black;
+            border-width: 0px;
+        }
+        
     }
     

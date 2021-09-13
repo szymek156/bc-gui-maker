@@ -1,14 +1,12 @@
-use std::{fs::File, io::Write, iter::FromIterator, path::{Path, PathBuf}};
+use std::{
+    fs::File,
+    io::Write,
+    iter::FromIterator,
+    os::linux::raw::stat,
+    path::{Path, PathBuf},
+};
 
-#[derive(Debug, Default)]
-pub struct Tile {
-    x: usize,
-    y: usize,
-    width: usize,
-    height: usize,
-    name: &'static str,
-}
-
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Dimension {
     x: usize,
     y: usize,
@@ -16,11 +14,34 @@ pub struct Dimension {
     height: usize,
 }
 
+#[derive(Debug, Default)]
+pub struct Tile {
+    dim: Dimension,
+    name: &'static str,
+}
+
+#[derive(Debug)]
+pub struct HardSplit {
+    first: Box<Node>,
+    first_occupation_percent: f64,
+    second: Box<Node>,
+    second_occupation_percent: f64,
+}
+
 #[derive(Debug)]
 pub enum Node {
+    /// Vertical layout, splits area evenly among elements in vector
     V(Vec<Box<Node>>),
+
+    /// Horizontal layout, splits area evenly among elements in vector
     H(Vec<Box<Node>>),
+
+    // Hard Horizontal split, splits into two parts, uneven
+    HH(HardSplit),
+
     Leaf(Tile),
+    HorizontalLine(Dimension),
+    VerticalLine(Dimension),
 }
 /// [] [] []
 pub fn h_layout<T>(elements: T) -> Node
@@ -46,6 +67,23 @@ where
     Node::V(elements.into_iter().map(|e| Box::new(e)).collect())
 }
 
+pub fn h_split(left: Node, left_percent: f64, right: Node) -> Node {
+    Node::HH(HardSplit {
+        first: Box::new(left),
+        first_occupation_percent: left_percent,
+        second: Box::new(right),
+        second_occupation_percent: 1.0 - left_percent,
+    })
+}
+
+pub fn h_line() -> Node {
+    Node::HorizontalLine(Dimension::default())
+}
+
+pub fn v_line() -> Node {
+    Node::VerticalLine(Dimension::default())
+}
+
 pub fn tile(name: &'static str) -> Node {
     Node::Leaf(Tile {
         name,
@@ -59,14 +97,50 @@ pub fn tile(name: &'static str) -> Node {
 pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
     match root {
         Node::V(nodes) => {
-            let len = nodes.len();
-            // Divide screen height area into equal parts
+            // Get number of elements which are NOT h_lines
+            let len = nodes
+                .iter()
+                .filter(|e| match e.as_ref() {
+                    Node::HorizontalLine(_) => false,
+                    _ => true,
+                })
+                .count();
+
+            // Split area evenly by nodes which are NOT h_lines
             let height = d.height / len;
+
+            let mut h_lines_count = 0;
 
             let _: Vec<_> = nodes
                 .iter_mut()
                 .enumerate()
                 .map(|(idx, node)| {
+                    // H lines overlap on other widgets,
+                    // so each time h_line is present we substract
+                    // the idx, so widget goes to the place under
+                    // the h_line
+                    // Without correction:
+                    // [widget1]
+                    // [h_line]
+                    // [empty_space]
+                    // [widget2]
+                    // [widget3] - outside the screen!
+
+                    // With correction:
+                    // [widget1]
+                    // [h_line]
+                    // [widget2]
+                    // [widget3] - bottom of the screen
+
+                    let idx = idx - h_lines_count;
+
+                    match node.as_ref() {
+                        Node::HorizontalLine(_) => {
+                            h_lines_count += 1;
+                        }
+                        _ => (),
+                    };
+
                     invalidate_dimensions(
                         node,
                         &Dimension {
@@ -96,67 +170,136 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 })
                 .collect();
         }
-        Node::Leaf(tile) => {
-            tile.x = d.x;
-            tile.y = d.y;
-            tile.width = d.width;
-            tile.height = d.height;
+        Node::HH(split) => {
+            let up_height = (d.height as f64 * split.first_occupation_percent) as usize;
+            let down_height = d.height - up_height;
+            invalidate_dimensions(
+                &mut split.first,
+                &Dimension {
+                    x: d.x,
+                    y: d.y,
+                    width: d.width,
+                    height: up_height,
+                },
+            );
+            invalidate_dimensions(
+                &mut split.second,
+                &Dimension {
+                    x: d.x,
+                    y: d.y + up_height,
+                    width: d.width,
+                    height: down_height,
+                },
+            );
         }
+        Node::Leaf(tile) => {
+            tile.dim = *d;
+        }
+        Node::HorizontalLine(dim) => {
+            const MARGIN: usize = 13;
+            dim.x = d.x + MARGIN;
+            dim.y = d.y;
+            dim.width = d.width - 2 * MARGIN;
+            dim.height = 1;
+        }
+        Node::VerticalLine(dim) => todo!(),
     }
 }
 
-fn render_tiles(root: &Node) -> String {
+/// Returns a tuple (Dynamic, Static) widgets
+fn render_widgets(root: &Node) -> (String, String) {
     match root {
-        // String is also an collection, so you can collect() to it, type is deduced automatically
-        // This is soo f*kin elegant! No accumulator needed!
-        Node::V(nodes) | Node::H(nodes) => nodes.iter().map(|node| render_tiles(node)).collect(),
+        Node::V(nodes) | Node::H(nodes) => nodes.iter().map(|node| render_widgets(node)).fold(
+            (String::default(), String::default()),
+            |mut acc, x| {
+                acc.0 += &x.0;
+                acc.1 += &x.1;
+
+                acc
+            },
+        ),
+        Node::HH(split) => {
+            let (l_dyn, l_stat) = render_widgets(&split.first);
+            let (r_dyn, r_stat) = render_widgets(&split.second);
+
+            // TODO: format! ??
+            (l_dyn + &r_dyn, l_stat + &r_stat)
+        }
+
         Node::Leaf(tile) => {
-            let font_size = (tile.width.min(tile.height) as f64 * 0.85) as usize;
-            format!(
-                r#"Rectangle {{
-                x: {x}px;
-                y: {y}px; 
-                width: {width}px;
-                height: {height}px; 
-                background: blue;
-                border-color: black;
-                border-width: 1px;
-                Text {{
-                    width: 100%;
-                    height: 100%; 
-                    text: "{name}"; 
-                    font-size: {font_size}px; 
-                    vertical-alignment: center; 
-                    horizontal-alignment: center;                     
-                }}
+            let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            (
+                format!(
+                    r#"Rectangle {{
+            x: {x}px;
+            y: {y}px; 
+            width: {width}px;
+            height: {height}px; 
+            background: blue;
+            border-color: black;
+            border-width: 0px;
+            Text {{
+                width: 100%;
+                height: 100%; 
+                text: "{name}"; 
+                font-size: {font_size}px; 
+                vertical-alignment: center; 
+                horizontal-alignment: center;                     
             }}
-            "#,
-                x = tile.x,
-                y = tile.y,
-                width = tile.width,
-                height = tile.height,
-                name = tile.name,
-                font_size=font_size
+        }}
+        "#,
+                    x = tile.dim.x,
+                    y = tile.dim.y,
+                    width = tile.dim.width,
+                    height = tile.dim.height,
+                    name = tile.name,
+                    font_size = font_size
+                ),
+                String::default(),
             )
         }
+        Node::HorizontalLine(dim) => (
+            String::default(),
+            format!(
+                r#"Rectangle {{
+            x: {x}px;
+            y: {y}px; 
+            width: {width}px;
+            height: {height}px; 
+            background: black;
+            border-color: black;
+            border-width: 0px;
+        }}
+        "#,
+                x = dim.x,
+                y = dim.y,
+                width = dim.width,
+                height = dim.height,
+            ),
+        ),
+        Node::VerticalLine(_) => todo!(),
     }
 }
 
 /// Gets gui layout and creates a sixty fps markup String representing that layout.
-pub fn render_to_60fps(root: &Node, d: &Dimension) -> String{
-    let tiles = render_tiles(&root);
+pub fn render_to_60fps(root: &Node, d: &Dimension) -> String {
+    let (tiles, static_elements) = render_widgets(&root);
 
     let result = format!(
         "MainWindow := Window{{
         width: {width}phx;
         height: {height}phx;
+        background: green;
 
         {tiles}
+
+        {static_elements}
     }}
     ",
         width = d.width,
         height = d.height,
-        tiles = tiles
+        tiles = tiles,
+        static_elements = static_elements
     );
 
     println!("Rendered:\n {}", result);
@@ -165,10 +308,10 @@ pub fn render_to_60fps(root: &Node, d: &Dimension) -> String{
     result
 }
 
-fn write_to_file(gui :&String, path: &str) {
+fn write_to_file(gui: &String, path: &str) {
     let full_path = PathBuf::from_iter([env!("CARGO_MANIFEST_DIR"), path]);
     let path = Path::new(&full_path);
-    
+
     let display = path.display();
 
     // Open a file in write-only mode, returns `io::Result<File>`
@@ -213,16 +356,26 @@ mod test {
 
     #[test]
     fn bc_welcome() {
-        let mut gui = v_layout([
+        let status_bar = h_layout([tile("status bar")]);
+        let welcome_page = v_layout([
+            h_line(),
             h_layout([
                 v_layout([tile("02/09/21"), tile("19:34:20")]),
                 v_layout([tile("in view/tracked"), tile("15/6")]),
             ]),
+            // v_line(),
+            h_line(),
             h_layout([
                 v_layout([tile("23.19[*C]"), tile("33.94[m]")]),
-                v_layout([tile("Hit button below"), tile("to calculate your"), tile("BMI"),])
+                v_layout([
+                    tile("Hit button below"),
+                    tile("to calculate your"),
+                    tile("BMI"),
+                ]),
             ]),
         ]);
+
+        let mut gui = h_split(status_bar, 0.15, welcome_page);
 
         let d = Dimension {
             x: 0,
