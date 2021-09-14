@@ -294,6 +294,8 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             }}
         }}
         "#,
+        // TODO: text probably needs v/h center aligment (remove that property from .60 template)
+        // so text will be centered also on BC
                     x = tile.dim.x,
                     y = tile.dim.y,
                     width = tile.dim.width,
@@ -371,7 +373,22 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
             // TODO: format! ??
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
-        Node::Leaf(tile) => (String::default(), String::default()),
+        Node::Leaf(tile) => {
+            let font = get_bc_font_size(tile);
+            (
+                format!(
+                    r#"    // {name}
+    paint.DrawStringAt({x}, {y}, message, &{font}, COLORED);
+
+"#,
+                    name = tile.name,
+                    x = tile.dim.x,
+                    y = tile.dim.y,
+                    font = font
+                ),
+                String::default(),
+            )
+        }
         Node::HorizontalLine(dim) => (
             String::default(),
             format!(
@@ -394,27 +411,38 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
         ),
     }
 }
+
+fn get_bc_font_size(tile: &Tile) -> &str {
+    let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+
+    match font_size {
+        0..=11 => "Font8",
+        12..=15 => "Font12",
+        16..=19 => "Font16",
+        20..=23 => "Font20",
+        24 => "Font24",
+        _ => "Font24",
+    }
+}
 fn render_to_bc(root: &Node, d: &Dimension) -> String {
     let (tiles, static_elements) = render_bc_widgets(&root);
 
     let result = format!(
         "
-        width: {width}phx;
-        height: {height}phx;
+    // Following code is generated automagically, 
+    // don't bother understand it.
        
-        {tiles}
+    {tiles}
 
-        void StatusView::drawStatic() {{
-            display_->enqueueStaticDraw(
-                [](Paint &paint) {{
-                {static_elements}
-                }},
-                // Rectangle needs to cover whole widget area
-                {{0, 0, display_->getWidth(), 13}});
-        }}
+    void StatusView::drawStatic() {{
+        display_->enqueueStaticDraw(
+            [](Paint &paint) {{
+            {static_elements}
+            }},
+            // Rectangle needs to cover whole widget area
+            {{0, 0, display_->getWidth(), 13}});
+    }}
     ",
-        width = d.width,
-        height = d.height,
         tiles = tiles,
         static_elements = static_elements
     );
