@@ -5,7 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use regex::{Regex, RegexBuilder};
+use regex::Regex;
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Dimension {
@@ -193,13 +193,6 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                         _ => (),
                     };
 
-                    // match node.as_ref() {
-                    //     Node::HorizontalLine(_) | Node::VerticalLine(_) => {
-                    //         h_lines_count += 1;
-                    //     }
-                    //     _ => (),
-                    // };
-
                     invalidate_dimensions(
                         node,
                         &Dimension {
@@ -255,26 +248,27 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
 }
 
 /// Returns a tuple (Dynamic, Static) widgets
-fn render_widgets(root: &Node) -> (String, String) {
+fn render_60fps_widgets(root: &Node) -> (String, String) {
     match root {
-        Node::V(nodes) | Node::H(nodes) => nodes.iter().map(|node| render_widgets(node)).fold(
-            (String::default(), String::default()),
-            |mut acc, x| {
+        Node::V(nodes) | Node::H(nodes) => nodes
+            .iter()
+            .map(|node| render_60fps_widgets(node))
+            .fold((String::default(), String::default()), |mut acc, x| {
                 acc.0 += &x.0;
                 acc.1 += &x.1;
 
                 acc
-            },
-        ),
+            }),
         Node::HH(split) => {
-            let (l_dyn, l_stat) = render_widgets(&split.first);
-            let (r_dyn, r_stat) = render_widgets(&split.second);
+            let (l_dyn, l_stat) = render_60fps_widgets(&split.first);
+            let (r_dyn, r_stat) = render_60fps_widgets(&split.second);
 
             // TODO: format! ??
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
 
         Node::Leaf(tile) => {
+            // Get number of lines of the text, use it to calculate font size
             // Need to escape n, and a \, hence 4x \
             let re = Regex::new("\\\\n").unwrap();
             let lines = 1.0 + re.find_iter(tile.name).count() as f64;
@@ -334,7 +328,7 @@ fn render_widgets(root: &Node) -> (String, String) {
 
 /// Gets gui layout and creates a sixty fps markup String representing that layout.
 pub fn render_to_60fps(root: &Node, d: &Dimension) -> String {
-    let (tiles, static_elements) = render_widgets(&root);
+    let (tiles, static_elements) = render_60fps_widgets(&root);
 
     let result = format!(
         "MainWindow := Window{{
@@ -353,9 +347,80 @@ pub fn render_to_60fps(root: &Node, d: &Dimension) -> String {
         static_elements = static_elements
     );
 
-    println!("Rendered:\n {}", result);
+    // println!("Rendered:\n {}", result);
 
     write_to_file(&result, "ui/main.60");
+    result
+}
+
+fn render_bc_widgets(root: &Node) -> (String, String) {
+    match root {
+        Node::V(nodes) | Node::H(nodes) => nodes.iter().map(|node| render_bc_widgets(node)).fold(
+            (String::default(), String::default()),
+            |mut acc, x| {
+                acc.0 += &x.0;
+                acc.1 += &x.1;
+
+                acc
+            },
+        ),
+        Node::HH(split) => {
+            let (l_dyn, l_stat) = render_bc_widgets(&split.first);
+            let (r_dyn, r_stat) = render_bc_widgets(&split.second);
+
+            // TODO: format! ??
+            (l_dyn + &r_dyn, l_stat + &r_stat)
+        }
+        Node::Leaf(tile) => (String::default(), String::default()),
+        Node::HorizontalLine(dim) => (
+            String::default(),
+            format!(
+                r#"    paint.DrawHorizontalLine({x}, {y}, {line_width}, COLORED);
+                "#,
+                x = dim.x,
+                y = dim.y,
+                line_width = dim.width
+            ),
+        ),
+        Node::VerticalLine(dim) => (
+            String::default(),
+            format!(
+                r#"    paint.DrawVerticalLine({x}, {y}, {line_height}, COLORED);
+                "#,
+                x = dim.x,
+                y = dim.y,
+                line_height = dim.height
+            ),
+        ),
+    }
+}
+fn render_to_bc(root: &Node, d: &Dimension) -> String {
+    let (tiles, static_elements) = render_bc_widgets(&root);
+
+    let result = format!(
+        "
+        width: {width}phx;
+        height: {height}phx;
+       
+        {tiles}
+
+        void StatusView::drawStatic() {{
+            display_->enqueueStaticDraw(
+                [](Paint &paint) {{
+                {static_elements}
+                }},
+                // Rectangle needs to cover whole widget area
+                {{0, 0, display_->getWidth(), 13}});
+        }}
+    ",
+        width = d.width,
+        height = d.height,
+        tiles = tiles,
+        static_elements = static_elements
+    );
+
+    println!("Rendered:\n {}", result);
+
     result
 }
 
@@ -411,11 +476,8 @@ mod test {
         let mut gui = v_layout([
             v_line(), // splits A | B
             h_layout([tile("A"), tile("B")]),
-
             v_line(), // splits C | D
-            h_layout([
-                tile("C"), tile("D"),
-                ]),
+            h_layout([tile("C"), tile("D")]),
         ]);
 
         let d = Dimension {
@@ -442,15 +504,12 @@ mod test {
             // --
             // B
             v_layout([tile("A"), tile("B")]),
-
             h_line(),
             // splits
             // C
             // --
             // D
-            v_layout([
-                tile("C"), tile("D"),
-                ]),
+            v_layout([tile("C"), tile("D")]),
         ]);
 
         let d = Dimension {
@@ -488,6 +547,8 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("23.19[*C]"), tile("33.94[m]")]),
+                // Need to pass raw literal, so in .60 file it will be interpreted
+                // as a string (newlines will persist)
                 v_layout([tile(r#"Hit button below\nto calculate your\nBMI"#)]),
             ]),
         ]);
@@ -504,5 +565,7 @@ mod test {
         invalidate_dimensions(&mut gui, &d);
 
         render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
     }
 }
