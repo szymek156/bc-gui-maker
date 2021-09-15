@@ -240,7 +240,8 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
         Node::Leaf(tile) => {
             tile.dim = *d;
             
-            tile.text.font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            tile.text.font_size = get_bc_font_size(font_size);
             // Text x, y relative to parent Tile (tile.dim + tile.text.dim)
             tile.text.dim.x = 4;
             // Assuming here font size describes amount of pixels,
@@ -396,17 +397,16 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
         Node::Leaf(tile) => {
-            let font = get_bc_font_size(tile);
             (
                 format!(
                     r#"    // {name}
-    paint.DrawStringAt({x}, {y}, message, &{font}, COLORED);
+    paint.DrawStringAt({x}, {y}, message, &Font{font}, COLORED);
 
 "#,
                     name = tile.text.text,
                     x = tile.dim.x + tile.text.dim.x,
                     y = tile.dim.y + tile.text.dim.y,
-                    font = font
+                    font = tile.text.font_size
                 ),
                 String::default(),
             )
@@ -434,14 +434,15 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
     }
 }
 
-fn get_bc_font_size(tile: &Tile) -> &str {
-    match tile.text.font_size {
-        0..=11 => "Font8",
-        12..=15 => "Font12",
-        16..=19 => "Font16",
-        20..=23 => "Font20",
-        24 => "Font24",
-        _ => "Font24",
+/// Gets 
+fn get_bc_font_size(font_size: usize) -> usize {
+    match font_size {
+        0..=11 => 8,
+        12..=15 => 12,
+        16..=19 => 16,
+        20..=23 => 20,
+        24 => 24,
+        _ => 24,
     }
 }
 fn render_to_bc(root: &Node, d: &Dimension) -> String {
