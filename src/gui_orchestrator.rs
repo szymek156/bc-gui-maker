@@ -16,9 +16,16 @@ pub struct Dimension {
 }
 
 #[derive(Debug, Default)]
+struct Text {
+    dim: Dimension,
+    text: &'static str,
+    font_size: usize,
+}
+
+#[derive(Debug, Default)]
 pub struct Tile {
     dim: Dimension,
-    name: &'static str,
+    text: Text,
 }
 
 #[derive(Debug)]
@@ -87,7 +94,10 @@ pub fn v_line() -> Node {
 
 pub fn tile(name: &'static str) -> Node {
     Node::Leaf(Tile {
-        name,
+        text: Text {
+            text: name,
+            ..Default::default()
+        },
         // Some type magic inference?
         ..Default::default()
     })
@@ -229,6 +239,14 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
         }
         Node::Leaf(tile) => {
             tile.dim = *d;
+            
+            tile.text.font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            // Text x, y relative to parent Tile (tile.dim + tile.text.dim)
+            tile.text.dim.x = 4;
+            // Assuming here font size describes amount of pixels,
+            // subtract from tile.dim.height to get amount of free space
+            // and div by 2 to have it vertically centered
+            tile.text.dim.y = (tile.dim.height - tile.text.font_size) / 2;
         }
         Node::HorizontalLine(dim) => {
             const MARGIN: usize = 13;
@@ -271,7 +289,7 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             // Get number of lines of the text, use it to calculate font size
             // Need to escape n, and a \, hence 4x \
             let re = Regex::new("\\\\n").unwrap();
-            let lines = 1.0 + re.find_iter(tile.name).count() as f64;
+            let lines = 1.0 + re.find_iter(tile.text.text).count() as f64;
 
             let font_size = ((tile.dim.width.min(tile.dim.height) as f64 * 0.75) / lines) as usize;
             (
@@ -285,22 +303,26 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             border-color: black;
             border-width: 0px;
             Text {{
+                x: {x_text}phx;
+                y: {y_text}phx;
                 width: 100%;
                 height: 100%;
                 text: "{name}";
-                font-size: {font_size}px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: {font_size}phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }}
         }}
         "#,
-        // TODO: text probably needs v/h center aligment (remove that property from .60 template)
-        // so text will be centered also on BC
+                    // TODO: text probably needs v/h center aligment (remove that property from .60 template)
+                    // so text will be centered also on BC
                     x = tile.dim.x,
                     y = tile.dim.y,
                     width = tile.dim.width,
                     height = tile.dim.height,
-                    name = tile.name,
+                    x_text = tile.text.dim.x,
+                    y_text = tile.text.dim.y,
+                    name = tile.text.text,
                     font_size = font_size
                 ),
                 String::default(),
@@ -381,9 +403,9 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
     paint.DrawStringAt({x}, {y}, message, &{font}, COLORED);
 
 "#,
-                    name = tile.name,
-                    x = tile.dim.x,
-                    y = tile.dim.y,
+                    name = tile.text.text,
+                    x = tile.dim.x + tile.text.dim.x,
+                    y = tile.dim.y + tile.text.dim.y,
                     font = font
                 ),
                 String::default(),
@@ -413,9 +435,7 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
 }
 
 fn get_bc_font_size(tile: &Tile) -> &str {
-    let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
-
-    match font_size {
+    match tile.text.font_size {
         0..=11 => "Font8",
         12..=15 => "Font12",
         16..=19 => "Font16",
@@ -581,7 +601,7 @@ mod test {
             ]),
         ]);
 
-        let mut gui = h_split(status_bar, 0.15, welcome_page);
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
 
         let d = Dimension {
             x: 0,

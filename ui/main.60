@@ -7,170 +7,190 @@ MainWindow := Window{
             x: 0px;
             y: 0px;
             width: 98px;
-            height: 19px;
+            height: 12px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 1phx;
                 width: 100%;
                 height: 100%;
                 text: "21:37";
-                font-size: 14px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 9phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 98px;
             y: 0px;
             width: 98px;
-            height: 19px;
+            height: 12px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 1phx;
                 width: 100%;
                 height: 100%;
                 text: "GPS 3D";
-                font-size: 14px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 9phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 196px;
             y: 0px;
             width: 98px;
-            height: 19px;
+            height: 12px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 1phx;
                 width: 100%;
                 height: 100%;
                 text: "69%";
-                font-size: 14px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 9phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 0px;
-            y: 19px;
+            y: 12px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "02/09/21";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 0px;
-            y: 46px;
+            y: 41px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "19:34:20";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 148px;
-            y: 19px;
+            y: 12px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "in view";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 148px;
-            y: 46px;
+            y: 41px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "15/6";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 0px;
-            y: 73px;
+            y: 70px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "23.19[*C]";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 0px;
-            y: 100px;
+            y: 99px;
             width: 148px;
-            height: 27px;
+            height: 29px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "33.94[m]";
-                font-size: 20px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 21phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         Rectangle {
             x: 148px;
-            y: 73px;
+            y: 70px;
             width: 148px;
-            height: 54px;
+            height: 58px;
             background: blue;
             border-color: black;
             border-width: 0px;
             Text {
+                x: 4phx;
+                y: 7phx;
                 width: 100%;
                 height: 100%;
                 text: "Hit button below\nto calculate your\nBMI";
-                font-size: 13px;
-                vertical-alignment: center;
-                horizontal-alignment: center;
+                font-size: 14phx;
+                //vertical-alignment: center;
+                //horizontal-alignment: center;
             }
         }
         
@@ -179,7 +199,7 @@ MainWindow := Window{
             x: 98px;
             y: 3px;
             width: 1px;
-            height: 13px;
+            height: 6px;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -188,14 +208,14 @@ MainWindow := Window{
             x: 196px;
             y: 3px;
             width: 1px;
-            height: 13px;
+            height: 6px;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
             x: 13px;
-            y: 19px;
+            y: 12px;
             width: 270px;
             height: 1px;
             background: black;
@@ -204,27 +224,27 @@ MainWindow := Window{
         }
         Rectangle {
             x: 148px;
-            y: 22px;
+            y: 15px;
             width: 1px;
-            height: 48px;
+            height: 52px;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
             x: 13px;
+            y: 70px;
+            width: 270px;
+            height: 1px;
+            background: black;
+            border-color: black;
+            border-width: 0px;
+        }
+        Rectangle {
+            x: 148px;
             y: 73px;
-            width: 270px;
-            height: 1px;
-            background: black;
-            border-color: black;
-            border-width: 0px;
-        }
-        Rectangle {
-            x: 148px;
-            y: 76px;
             width: 1px;
-            height: 48px;
+            height: 52px;
             background: black;
             border-color: black;
             border-width: 0px;
