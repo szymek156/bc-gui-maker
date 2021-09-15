@@ -1,250 +1,324 @@
 MainWindow := Window{
         width: 296phx;
         height: 128phx;
-        background: green;
+        background: red;
 
         Rectangle {
-            x: 0px;
-            y: 0px;
-            width: 98px;
-            height: 12px;
-            background: blue;
+            x: 0phx;
+            y: 0phx;
+            width: 98phx;
+            height: 12phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
-                y: 1phx;
+                //x: {x_text}phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
                 text: "21:37";
-                font-size: 9phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 8phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 98px;
-            y: 0px;
-            width: 98px;
-            height: 12px;
-            background: blue;
+            x: 98phx;
+            y: 0phx;
+            width: 98phx;
+            height: 12phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
-                y: 1phx;
+                //x: {x_text}phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
                 text: "GPS 3D";
-                font-size: 9phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 8phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 196px;
-            y: 0px;
-            width: 98px;
-            height: 12px;
-            background: blue;
+            x: 196phx;
+            y: 0phx;
+            width: 98phx;
+            height: 12phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
-                y: 1phx;
+                //x: {x_text}phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
                 text: "69%";
-                font-size: 9phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 8phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 0px;
-            y: 12px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 0phx;
+            y: 12phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "02/09/21";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 0px;
-            y: 41px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 0phx;
+            y: 41phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "19:34:20";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 148px;
-            y: 12px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 148phx;
+            y: 12phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
-                text: "in view";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                text: "in view / tracked";
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 148px;
-            y: 41px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 148phx;
+            y: 41phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
-                text: "15/6";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                text: "13 / 3";
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 0px;
-            y: 70px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 0phx;
+            y: 70phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
                 text: "23.19[*C]";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 0px;
-            y: 99px;
-            width: 148px;
-            height: 29px;
-            background: blue;
+            x: 0phx;
+            y: 99phx;
+            width: 148phx;
+            height: 29phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
+                //x: {x_text}phx;
                 y: 4phx;
                 width: 100%;
                 height: 100%;
-                text: "33.94[m]";
-                font-size: 21phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                text: "133.94[m]";
+                font-size: 20phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         Rectangle {
-            x: 148px;
-            y: 70px;
-            width: 148px;
-            height: 58px;
-            background: blue;
+            x: 148phx;
+            y: 70phx;
+            width: 148phx;
+            height: 19phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {
-                x: 4phx;
-                y: 7phx;
+                //x: {x_text}phx;
+                y: 3phx;
                 width: 100%;
                 height: 100%;
-                text: "Hit button below\nto calculate your\nBMI";
-                font-size: 14phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                text: "Hit button below";
+                font-size: 12phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+        Rectangle {
+            x: 148phx;
+            y: 89phx;
+            width: 148phx;
+            height: 19phx;
+            background: whitesmoke;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                //x: {x_text}phx;
+                y: 3phx;
+                width: 100%;
+                height: 100%;
+                text: "to calculate your";
+                font-size: 12phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+        Rectangle {
+            x: 148phx;
+            y: 108phx;
+            width: 148phx;
+            height: 19phx;
+            background: whitesmoke;
+            border-color: black;
+            border-width: 0px;
+            Text {
+                //x: {x_text}phx;
+                y: 3phx;
+                width: 100%;
+                height: 100%;
+                text: "BMI";
+                font-size: 12phx;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }
         }
         
 
         Rectangle {
-            x: 98px;
-            y: 3px;
-            width: 1px;
-            height: 6px;
+            x: 98phx;
+            y: 3phx;
+            width: 1phx;
+            height: 6phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
-            x: 196px;
-            y: 3px;
-            width: 1px;
-            height: 6px;
+            x: 196phx;
+            y: 3phx;
+            width: 1phx;
+            height: 6phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
-            x: 13px;
-            y: 12px;
-            width: 270px;
-            height: 1px;
+            x: 13phx;
+            y: 12phx;
+            width: 270phx;
+            height: 1phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
-            x: 148px;
-            y: 15px;
-            width: 1px;
-            height: 52px;
+            x: 148phx;
+            y: 15phx;
+            width: 1phx;
+            height: 52phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
-            x: 13px;
-            y: 70px;
-            width: 270px;
-            height: 1px;
+            x: 13phx;
+            y: 70phx;
+            width: 270phx;
+            height: 1phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
-            x: 148px;
-            y: 73px;
-            width: 1px;
-            height: 52px;
+            x: 148phx;
+            y: 73phx;
+            width: 1phx;
+            height: 52phx;
             background: black;
             border-color: black;
             border-width: 0px;

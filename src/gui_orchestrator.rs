@@ -239,11 +239,19 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
         }
         Node::Leaf(tile) => {
             tile.dim = *d;
-            
+
             let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
             tile.text.font_size = get_bc_font_size(font_size);
+
+            let char_width = get_bc_font_width(tile.text.font_size);
+            // TODO: use char len to calculate font size
+            let char_len = tile.text.text.chars().count();
+
+            // If str goes beyond the Tile, clamp it's width
+            let str_width = (char_width * char_len).min(tile.dim.width);
+
             // Text x, y relative to parent Tile (tile.dim + tile.text.dim)
-            tile.text.dim.x = 4;
+            tile.text.dim.x = (tile.dim.width - str_width) / 2;
             // Assuming here font size describes amount of pixels,
             // subtract from tile.dim.height to get amount of free space
             // and div by 2 to have it vertically centered
@@ -289,42 +297,46 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
         Node::Leaf(tile) => {
             // Get number of lines of the text, use it to calculate font size
             // Need to escape n, and a \, hence 4x \
-            let re = Regex::new("\\\\n").unwrap();
-            let lines = 1.0 + re.find_iter(tile.text.text).count() as f64;
+            // let re = Regex::new("\\\\n").unwrap();
+            // let lines = 1.0 + re.find_iter(tile.text.text).count() as f64;
 
-            let font_size = ((tile.dim.width.min(tile.dim.height) as f64 * 0.75) / lines) as usize;
+            // let font_size = ((tile.dim.width.min(tile.dim.height) as f64 * 0.75) / lines) as usize;
             (
                 format!(
                     r#"Rectangle {{
-            x: {x}px;
-            y: {y}px;
-            width: {width}px;
-            height: {height}px;
-            background: blue;
+            x: {x}phx;
+            y: {y}phx;
+            width: {width}phx;
+            height: {height}phx;
+            background: whitesmoke;
             border-color: black;
             border-width: 0px;
             Text {{
-                x: {x_text}phx;
+                //x: {{x_text}}phx;
                 y: {y_text}phx;
                 width: 100%;
                 height: 100%;
                 text: "{name}";
                 font-size: {font_size}phx;
-                //vertical-alignment: center;
-                //horizontal-alignment: center;
+                // That's the closest font to the one on BC display,
+                // still very different
+                font-family: "noto mono";
+                // vertical-alignment: center;
+                horizontal-alignment: center;
             }}
         }}
         "#,
-                    // TODO: text probably needs v/h center aligment (remove that property from .60 template)
-                    // so text will be centered also on BC
+
                     x = tile.dim.x,
                     y = tile.dim.y,
                     width = tile.dim.width,
                     height = tile.dim.height,
-                    x_text = tile.text.dim.x,
+                    // Use horizontal-alignment, since fonts differ significantly
+                    // between 60fps and BC display
+                    // x_text = tile.text.dim.x,
                     y_text = tile.text.dim.y,
                     name = tile.text.text,
-                    font_size = font_size
+                    font_size = tile.text.font_size
                 ),
                 String::default(),
             )
@@ -333,10 +345,10 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             String::default(),
             format!(
                 r#"Rectangle {{
-            x: {x}px;
-            y: {y}px;
-            width: {width}px;
-            height: {height}px;
+            x: {x}phx;
+            y: {y}phx;
+            width: {width}phx;
+            height: {height}phx;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -359,7 +371,7 @@ pub fn render_to_60fps(root: &Node, d: &Dimension) -> String {
         "MainWindow := Window{{
         width: {width}phx;
         height: {height}phx;
-        background: green;
+        background: red;
 
         {tiles}
 
@@ -396,21 +408,19 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
             // TODO: format! ??
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
-        Node::Leaf(tile) => {
-            (
-                format!(
-                    r#"    // {name}
+        Node::Leaf(tile) => (
+            format!(
+                r#"    // {name}
     paint.DrawStringAt({x}, {y}, message, &Font{font}, COLORED);
 
 "#,
-                    name = tile.text.text,
-                    x = tile.dim.x + tile.text.dim.x,
-                    y = tile.dim.y + tile.text.dim.y,
-                    font = tile.text.font_size
-                ),
-                String::default(),
-            )
-        }
+                name = tile.text.text,
+                x = tile.dim.x + tile.text.dim.x,
+                y = tile.dim.y + tile.text.dim.y,
+                font = tile.text.font_size
+            ),
+            String::default(),
+        ),
         Node::HorizontalLine(dim) => (
             String::default(),
             format!(
@@ -434,7 +444,7 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
     }
 }
 
-/// Gets 
+/// Gets raw font size and samples it to sizes supported by BC display
 fn get_bc_font_size(font_size: usize) -> usize {
     match font_size {
         0..=11 => 8,
@@ -445,14 +455,27 @@ fn get_bc_font_size(font_size: usize) -> usize {
         _ => 24,
     }
 }
+
+/// Width in pixels for single character depending on the font size.
+/// Taken from the font source code.
+fn get_bc_font_width(font_size: usize) -> usize {
+    match font_size {
+        8 => 5,
+        12 => 7,
+        16 => 11,
+        20 => 14,
+        24 => 17,
+        _ => unreachable!("got font_size {}", font_size),
+    }
+}
 fn render_to_bc(root: &Node, d: &Dimension) -> String {
     let (tiles, static_elements) = render_bc_widgets(&root);
 
     let result = format!(
         "
-    // Following code is generated automagically, 
+    // Following code is generated automagically,
     // don't bother understand it.
-       
+
     {tiles}
 
     void StatusView::drawStatic() {{
@@ -587,7 +610,7 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("02/09/21"), tile("19:34:20")]),
-                v_layout([tile("in view"), tile("15/6")]),
+                v_layout([tile("in view / tracked"), tile("13 / 3")]),
             ]),
             // Current implementation of invalidate_dimensions
             // makes {h,v}_line split tiles defined after them
@@ -595,10 +618,12 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("23.19[*C]"), tile("33.94[m]")]),
-                // Need to pass raw literal, so in .60 file it will be interpreted
-                // as a string (newlines will persist)
-                v_layout([tile(r#"Hit button below\nto calculate your\nBMI"#)]),
+                v_layout([tile("23.19[*C]"), tile("133.94[m]")]),
+                v_layout([
+                    tile("Hit button below"),
+                    tile("to calculate your"),
+                    tile("BMI"),
+                ]),
             ]),
         ]);
 
