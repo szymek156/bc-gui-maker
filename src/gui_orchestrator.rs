@@ -18,7 +18,8 @@ pub struct Dimension {
 #[derive(Debug, Default)]
 struct Text {
     dim: Dimension,
-    text: &'static str,
+    name: &'static str,
+    format: Option<&'static str>,
     font_size: usize,
 }
 
@@ -95,12 +96,25 @@ pub fn v_line() -> Node {
 pub fn tile(name: &'static str) -> Node {
     Node::Leaf(Tile {
         text: Text {
-            text: name,
+            name,
             ..Default::default()
         },
         // Some type magic inference?
         ..Default::default()
     })
+}
+
+impl Node {
+    pub fn with_format(mut self, format: &'static str) -> Self {
+        // TODO: any better way to do this?
+        match self {
+            Node::Leaf(ref mut tile) => {
+                tile.text.format = Some(format);
+                self
+            }
+            _ => panic!("Cannot set format on {:?}", self),
+        }
+    }
 }
 
 /// Gets root of the gui, and updates leaf dimensions with
@@ -240,12 +254,12 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
         Node::Leaf(tile) => {
             tile.dim = *d;
 
-            let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
-            tile.text.font_size = get_bc_font_size(font_size);
+            // let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
+            set_bc_font_size(tile);
 
             let char_width = get_bc_font_width(tile.text.font_size);
             // TODO: use char len to calculate font size
-            let char_len = tile.text.text.chars().count();
+            let char_len = tile.text.name.chars().count();
 
             // If str goes beyond the Tile, clamp it's width
             let str_width = (char_width * char_len).min(tile.dim.width);
@@ -326,7 +340,6 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             }}
         }}
         "#,
-
                     x = tile.dim.x,
                     y = tile.dim.y,
                     width = tile.dim.width,
@@ -335,7 +348,7 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
                     // between 60fps and BC display
                     // x_text = tile.text.dim.x,
                     y_text = tile.text.dim.y,
-                    name = tile.text.text,
+                    name = tile.text.name,
                     font_size = tile.text.font_size
                 ),
                 String::default(),
@@ -408,19 +421,47 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
             // TODO: format! ??
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
-        Node::Leaf(tile) => (
-            format!(
-                r#"    // {name}
+        Node::Leaf(tile) => {
+            let format_msg = match tile.text.format {
+                Some(format) => format!(
+                    r#"snprintf(message, msg_size, "{format}", data.);"#,
+                    format = format
+                ),
+                None => format!(
+                    r#"snprintf(message, msg_size, "{text}");"#,
+                    text = tile.text.name
+                ),
+            };
+
+            (
+                format!(
+                    r#"// {name}
+display_->enqueueDraw(
+    [&](Paint &paint) {{
+        const int msg_size = 128;
+        char message[msg_size];
+
+    {format_msg}
     paint.DrawStringAt({x}, {y}, message, &Font{font}, COLORED);
 
+}},
+{{{x0}, {y0}, {x1}, {y1}}});
+
 "#,
-                name = tile.text.text,
-                x = tile.dim.x + tile.text.dim.x,
-                y = tile.dim.y + tile.text.dim.y,
-                font = tile.text.font_size
-            ),
-            String::default(),
-        ),
+                    name = tile.text.name,
+                    format_msg = format_msg,
+                    x = tile.dim.x + tile.text.dim.x,
+                    y = tile.dim.y + tile.text.dim.y,
+                    font = tile.text.font_size,
+                    // Shrink refresh area so static elements will not be wiped out
+                    x0 = tile.dim.x + 1,
+                    y0 = tile.dim.y + 1,
+                    x1 = tile.dim.x + tile.dim.width - 1,
+                    y1 = tile.dim.y + tile.dim.height - 1
+                ),
+                String::default(),
+            )
+        }
         Node::HorizontalLine(dim) => (
             String::default(),
             format!(
@@ -445,14 +486,19 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
 }
 
 /// Gets raw font size and samples it to sizes supported by BC display
-fn get_bc_font_size(font_size: usize) -> usize {
-    match font_size {
-        0..=11 => 8,
-        12..=15 => 12,
-        16..=19 => 16,
-        20..=23 => 20,
-        24 => 24,
-        _ => 24,
+fn set_bc_font_size(tile: &mut Tile) {
+    let char_len = tile.text.name.chars().count();
+
+    tile.text.font_size = 8;
+    // Try to fit greatest font in the Rectangle
+    for font in [24, 20, 16, 12, 8] {
+        let char_width = get_bc_font_width(font);
+        let str_width = char_width * char_len;
+
+        if str_width < tile.dim.width && font < tile.dim.height {
+            tile.text.font_size = font;
+            break;
+        }
     }
 }
 
@@ -599,18 +645,24 @@ mod test {
     #[test]
     fn bc_welcome() {
         let status_bar = h_layout([
-            tile("21:37"),
+            tile("21:37").with_format("%T"),
             v_line(),
-            tile("GPS 3D"),
+            tile("GPS 3D").with_format("GPS %1d"),
             v_line(),
-            tile("69%"),
+            tile("02/09/21").with_format("%d/%m/%y"),
         ]);
         let welcome_page = v_layout([
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("02/09/21"), tile("19:34:20")]),
-                v_layout([tile("in view / tracked"), tile("13 / 3")]),
+                v_layout([
+                    tile("02/09/21").with_format("%d/%m/%y"),
+                    tile("19:34:20").with_format("%T"),
+                ]),
+                v_layout([
+                    tile("in view / tracked"),
+                    tile("13 / 11").with_format("%d / %d"),
+                ]),
             ]),
             // Current implementation of invalidate_dimensions
             // makes {h,v}_line split tiles defined after them
@@ -618,7 +670,10 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("23.19[*C]"), tile("133.94[m]")]),
+                v_layout([
+                    tile("23.19[*C]").with_format("%5.2f[*C]"),
+                    tile("133.94[m]").with_format("%5.2f[m]"),
+                ]),
                 v_layout([
                     tile("Hit button below"),
                     tile("to calculate your"),

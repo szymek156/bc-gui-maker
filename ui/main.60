@@ -60,7 +60,7 @@ MainWindow := Window{
                 y: 2phx;
                 width: 100%;
                 height: 100%;
-                text: "69%";
+                text: "02/09/21";
                 font-size: 8phx;
                 // That's the closest font to the one on BC display,
                 // still very different
@@ -79,11 +79,11 @@ MainWindow := Window{
             border-width: 0px;
             Text {
                 //x: {x_text}phx;
-                y: 4phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
                 text: "02/09/21";
-                font-size: 20phx;
+                font-size: 24phx;
                 // That's the closest font to the one on BC display,
                 // still very different
                 font-family: "noto mono";
@@ -101,11 +101,11 @@ MainWindow := Window{
             border-width: 0px;
             Text {
                 //x: {x_text}phx;
-                y: 4phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
                 text: "19:34:20";
-                font-size: 20phx;
+                font-size: 24phx;
                 // That's the closest font to the one on BC display,
                 // still very different
                 font-family: "noto mono";
@@ -123,11 +123,11 @@ MainWindow := Window{
             border-width: 0px;
             Text {
                 //x: {x_text}phx;
-                y: 4phx;
+                y: 8phx;
                 width: 100%;
                 height: 100%;
                 text: "in view / tracked";
-                font-size: 20phx;
+                font-size: 12phx;
                 // That's the closest font to the one on BC display,
                 // still very different
                 font-family: "noto mono";
@@ -145,11 +145,11 @@ MainWindow := Window{
             border-width: 0px;
             Text {
                 //x: {x_text}phx;
-                y: 4phx;
+                y: 2phx;
                 width: 100%;
                 height: 100%;
-                text: "13 / 3";
-                font-size: 20phx;
+                text: "13 / 11";
+                font-size: 24phx;
                 // That's the closest font to the one on BC display,
                 // still very different
                 font-family: "noto mono";
@@ -255,11 +255,11 @@ MainWindow := Window{
             border-width: 0px;
             Text {
                 //x: {x_text}phx;
-                y: 3phx;
+                y: 1phx;
                 width: 100%;
                 height: 100%;
                 text: "BMI";
-                font-size: 12phx;
+                font-size: 16phx;
                 // That's the closest font to the one on BC display,
                 // still very different
                 font-family: "noto mono";
