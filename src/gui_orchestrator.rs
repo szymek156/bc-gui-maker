@@ -20,7 +20,10 @@ struct Text {
     dim: Dimension,
     name: &'static str,
     format: Option<&'static str>,
-    font_size: usize,
+    // Font may be set by the user, then
+    // orchestrator is not allowed to change it
+    // TODO: Change to enum
+    font_size: Option<usize>,
 }
 
 #[derive(Debug, Default)]
@@ -115,6 +118,18 @@ impl Node {
             _ => panic!("Cannot set format on {:?}", self),
         }
     }
+
+    /// Sets explicitly font size. Make sure it will fit in the
+    /// Rectangle height, otherwise dim validation will panic
+    pub fn with_font_size(mut self, size: usize) -> Self {
+        match self {
+            Node::Leaf(ref mut tile) => {
+                tile.text.font_size = Some(size);
+                self
+            }
+            _ => panic!("Cannot set font_size on {:?}", self),
+        }
+    }
 }
 
 /// Gets root of the gui, and updates leaf dimensions with
@@ -132,7 +147,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 .count();
 
             // Split area evenly by nodes which are NOT {h,v}_lines
-            let height = d.height / len;
+            let height = ((d.height / len) as f64).round() as usize;
 
             let mut h_lines_count = 0;
 
@@ -195,7 +210,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 .count();
 
             // Split area evenly by nodes which are NOT {h,v}_lines
-            let width = d.width / len;
+            let width = ((d.width / len) as f64).round() as usize;
 
             let mut h_lines_count = 0;
 
@@ -255,9 +270,12 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
             tile.dim = *d;
 
             // let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
-            set_bc_font_size(tile);
+            if tile.text.font_size.is_none() {
+                set_bc_font_size(tile);
+            }
 
-            let char_width = get_bc_font_width(tile.text.font_size);
+            let font_size = tile.text.font_size.unwrap();
+            let char_width = get_bc_font_width(font_size);
             // TODO: use char len to calculate font size
             let char_len = tile.text.name.chars().count();
 
@@ -269,7 +287,8 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
             // Assuming here font size describes amount of pixels,
             // subtract from tile.dim.height to get amount of free space
             // and div by 2 to have it vertically centered
-            tile.text.dim.y = (tile.dim.height - tile.text.font_size) / 2;
+            
+            tile.text.dim.y = (tile.dim.height - font_size) / 2;
         }
         Node::HorizontalLine(dim) => {
             const MARGIN: usize = 13;
@@ -349,7 +368,7 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
                     // x_text = tile.text.dim.x,
                     y_text = tile.text.dim.y,
                     name = tile.text.name,
-                    font_size = tile.text.font_size
+                    font_size = tile.text.font_size.unwrap()
                 ),
                 String::default(),
             )
@@ -452,7 +471,7 @@ display_->enqueueDraw(
                     format_msg = format_msg,
                     x = tile.dim.x + tile.text.dim.x,
                     y = tile.dim.y + tile.text.dim.y,
-                    font = tile.text.font_size,
+                    font = tile.text.font_size.unwrap(),
                     // Shrink refresh area so static elements will not be wiped out
                     x0 = tile.dim.x + 1,
                     y0 = tile.dim.y + 1,
@@ -489,14 +508,14 @@ display_->enqueueDraw(
 fn set_bc_font_size(tile: &mut Tile) {
     let char_len = tile.text.name.chars().count();
 
-    tile.text.font_size = 8;
+    tile.text.font_size = Some(8);
     // Try to fit greatest font in the Rectangle
     for font in [24, 20, 16, 12, 8] {
         let char_width = get_bc_font_width(font);
         let str_width = char_width * char_len;
 
         if str_width < tile.dim.width && font < tile.dim.height {
-            tile.text.font_size = font;
+            tile.text.font_size = Some(font);
             break;
         }
     }
@@ -643,7 +662,7 @@ mod test {
     }
 
     #[test]
-    fn bc_welcome() {
+    fn bc_test_page() {
         let status_bar = h_layout([
             tile("21:37").with_format("%T"),
             v_line(),
@@ -661,7 +680,7 @@ mod test {
                 ]),
                 v_layout([
                     tile("in view / tracked"),
-                    tile("13 / 11").with_format("%d / %d"),
+                    tile("13 / 11").with_format("%d / %d").with_font_size(12),
                 ]),
             ]),
             // Current implementation of invalidate_dimensions
@@ -680,6 +699,219 @@ mod test {
                     tile("BMI"),
                 ]),
             ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn welcome() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            
+            h_layout([
+                v_layout([
+                    tile("21:37:07").with_format("%T"),
+                    h_line(),
+                    tile("02/09/21").with_format("%d/%m/%y"),
+                ]),
+            ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn activity() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            v_line(),
+            h_layout([
+                v_layout([
+                    tile("Activity"),
+                    h_line(),
+                    tile("")
+                ]),
+                v_layout([
+                    tile("Running").with_font_size(16),
+                    tile("Cycling").with_font_size(16),
+                    tile("Hiking").with_font_size(16),
+                    tile("In. Cycling").with_font_size(16),
+                    tile("Yoga").with_font_size(16),
+                ]),
+            ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn activity_running() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            v_line(),
+            h_layout([
+                v_layout([
+                    tile("Running"),
+                    h_line(),
+                    tile("Workouts")
+                ]),
+                v_layout([
+                    tile("5k").with_font_size(16),
+                    tile("10k").with_font_size(16),
+                    tile("Half Marathon").with_font_size(16),
+                    tile("Marathon").with_font_size(16),
+                    tile("Cooper Test").with_font_size(16),
+                ]),
+            ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn activity_running_cooper_test() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            v_line(),
+            h_layout([
+                v_layout([
+                    tile("Running"),
+                    h_line(),
+                    tile("Cooper Test")
+                ]),
+                v_layout([
+                    tile("Do It"),
+                    tile("View"),
+                ]),
+            ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn activity_running_cooper_test_view() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            h_split(
+                v_layout([
+                    tile("Cooper Test"),
+                    h_line(),
+                    
+                ]), 0.2,
+                v_layout([
+                    tile("Step 1: Warmup").with_font_size(12),
+                    tile("Step 2: Run for your life for 12 mins").with_font_size(12),
+                    tile("Step 3: Note the distance").with_font_size(12),
+                    tile("Step 4: Look at the table").with_font_size(12),
+                    // TODO: all steps disappear after adding another element
+                    // Because for .60fps font of size 16 does not fit in a 
+                    // rect of height 18 and clips the text
+                    // tile("Step 5"),
+                ]),
+                
+            ),
         ]);
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
