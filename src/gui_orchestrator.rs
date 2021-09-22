@@ -32,6 +32,16 @@ pub struct Tile {
     text: Text,
 }
 
+#[derive(Debug, Default)]
+pub struct List {
+    // Dimension of whole element
+    dim: Dimension,
+    // Elements which user is able to select
+    elements: Vec<Tile>,
+    // If visible_elements is less than # of elements in total
+    // scroll the view
+    visible_elements: usize,
+}
 #[derive(Debug)]
 pub struct HardSplit {
     first: Box<Node>,
@@ -51,9 +61,10 @@ pub enum Node {
     // Hard Horizontal split, splits into two parts, uneven
     HH(HardSplit),
 
-    Leaf(Tile),
+    Tile(Tile),
     HorizontalLine(Dimension),
     VerticalLine(Dimension),
+    VListWidget(List),
 }
 /// [] [] []
 pub fn h_layout<T>(elements: T) -> Node
@@ -97,7 +108,7 @@ pub fn v_line() -> Node {
 }
 
 pub fn tile(name: &'static str) -> Node {
-    Node::Leaf(Tile {
+    Node::Tile(Tile {
         text: Text {
             name,
             ..Default::default()
@@ -107,11 +118,33 @@ pub fn tile(name: &'static str) -> Node {
     })
 }
 
+pub fn v_list<T>(elements: T) -> Node
+where
+    T: IntoIterator<Item = &'static str>,
+{
+    let elements: Vec<_> = elements
+        .into_iter()
+        .map(|el| Tile {
+            text: Text {
+                name: el,
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .collect();
+
+    Node::VListWidget(List {
+        visible_elements: elements.len(),
+        elements,
+        ..Default::default()
+    })
+}
+
 impl Node {
     pub fn with_format(mut self, format: &'static str) -> Self {
         // TODO: any better way to do this?
         match self {
-            Node::Leaf(ref mut tile) => {
+            Node::Tile(ref mut tile) => {
                 tile.text.format = Some(format);
                 self
             }
@@ -123,8 +156,16 @@ impl Node {
     /// Rectangle height, otherwise dim validation will panic
     pub fn with_font_size(mut self, size: usize) -> Self {
         match self {
-            Node::Leaf(ref mut tile) => {
+            Node::Tile(ref mut tile) => {
                 tile.text.font_size = Some(size);
+                self
+            }
+            Node::VListWidget(ref mut list) => {
+                let _: Vec<_> = list
+                    .elements
+                    .iter_mut()
+                    .map(|element| element.text.font_size = Some(size))
+                    .collect();
                 self
             }
             _ => panic!("Cannot set font_size on {:?}", self),
@@ -266,7 +307,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 },
             );
         }
-        Node::Leaf(tile) => {
+        Node::Tile(tile) => {
             tile.dim = *d;
 
             // let font_size = (tile.dim.width.min(tile.dim.height) as f64 * 0.75) as usize;
@@ -274,21 +315,7 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
                 set_bc_font_size(tile);
             }
 
-            let font_size = tile.text.font_size.unwrap();
-            let char_width = get_bc_font_width(font_size);
-            // TODO: use char len to calculate font size
-            let char_len = tile.text.name.chars().count();
-
-            // If str goes beyond the Tile, clamp it's width
-            let str_width = (char_width * char_len).min(tile.dim.width);
-
-            // Text x, y relative to parent Tile (tile.dim + tile.text.dim)
-            tile.text.dim.x = (tile.dim.width - str_width) / 2;
-            // Assuming here font size describes amount of pixels,
-            // subtract from tile.dim.height to get amount of free space
-            // and div by 2 to have it vertically centered
-            
-            tile.text.dim.y = (tile.dim.height - font_size) / 2;
+            center_text(tile);
         }
         Node::HorizontalLine(dim) => {
             const MARGIN: usize = 13;
@@ -304,9 +331,66 @@ pub fn invalidate_dimensions(root: &mut Node, d: &Dimension) {
             dim.width = 1;
             dim.height = d.height - 2 * MARGIN;
         }
+        Node::VListWidget(list) => {
+            list.dim = *d;
+
+            const MARGIN: usize = 1;
+
+            let tile_height = d.height / list.visible_elements;
+
+            for (idx, tile) in &mut list.elements.iter_mut().enumerate() {
+                let offset = idx * tile_height;
+
+                tile.dim = Dimension {
+                    x: list.dim.x + MARGIN,
+                    y: d.y + offset,
+                    width: list.dim.width - 2 * MARGIN,
+                    height: tile_height,
+                };
+
+                center_text(tile)
+            }
+        }
     }
 }
 
+fn render_60fps_rectangle(tile: &Tile) -> String {
+    format!(
+        r#"Rectangle {{
+    x: {x}phx;
+    y: {y}phx;
+    width: {width}phx;
+    height: {height}phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {{
+        //x: {{x_text}}phx;
+        y: {y_text}phx;
+        width: 100%;
+        height: 100%;
+        text: "{name}";
+        font-size: {font_size}phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }}
+}}
+"#,
+        x = tile.dim.x,
+        y = tile.dim.y,
+        width = tile.dim.width,
+        height = tile.dim.height,
+        // Use horizontal-alignment, since fonts differ significantly
+        // between 60fps and BC display
+        // x_text = tile.text.dim.x,
+        y_text = tile.text.dim.y,
+        name = tile.text.name,
+        font_size = tile.text.font_size.unwrap()
+    )
+}
 /// Returns a tuple (Dynamic, Static) widgets
 fn render_60fps_widgets(root: &Node) -> (String, String) {
     match root {
@@ -327,52 +411,7 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
 
-        Node::Leaf(tile) => {
-            // Get number of lines of the text, use it to calculate font size
-            // Need to escape n, and a \, hence 4x \
-            // let re = Regex::new("\\\\n").unwrap();
-            // let lines = 1.0 + re.find_iter(tile.text.text).count() as f64;
-
-            // let font_size = ((tile.dim.width.min(tile.dim.height) as f64 * 0.75) / lines) as usize;
-            (
-                format!(
-                    r#"Rectangle {{
-            x: {x}phx;
-            y: {y}phx;
-            width: {width}phx;
-            height: {height}phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {{
-                //x: {{x_text}}phx;
-                y: {y_text}phx;
-                width: 100%;
-                height: 100%;
-                text: "{name}";
-                font-size: {font_size}phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }}
-        }}
-        "#,
-                    x = tile.dim.x,
-                    y = tile.dim.y,
-                    width = tile.dim.width,
-                    height = tile.dim.height,
-                    // Use horizontal-alignment, since fonts differ significantly
-                    // between 60fps and BC display
-                    // x_text = tile.text.dim.x,
-                    y_text = tile.text.dim.y,
-                    name = tile.text.name,
-                    font_size = tile.text.font_size.unwrap()
-                ),
-                String::default(),
-            )
-        }
+        Node::Tile(tile) => (render_60fps_rectangle(tile), String::default()),
         Node::HorizontalLine(dim) | Node::VerticalLine(dim) => (
             String::default(),
             format!(
@@ -391,6 +430,12 @@ fn render_60fps_widgets(root: &Node) -> (String, String) {
                 width = dim.width,
                 height = dim.height,
             ),
+        ),
+        Node::VListWidget(list) => (
+            list.elements.iter().fold(String::new(), |acc, tile| {
+                acc + &render_60fps_rectangle(tile)
+            }),
+            String::default(),
         ),
     }
 }
@@ -440,7 +485,7 @@ fn render_bc_widgets(root: &Node) -> (String, String) {
             // TODO: format! ??
             (l_dyn + &r_dyn, l_stat + &r_stat)
         }
-        Node::Leaf(tile) => {
+        Node::Tile(tile) => {
             let format_msg = match tile.text.format {
                 Some(format) => format!(
                     r#"snprintf(message, msg_size, "{format}", data.);"#,
@@ -501,6 +546,10 @@ display_->enqueueDraw(
                 line_height = dim.height
             ),
         ),
+        Node::VListWidget(_) => {
+            // TODO: implement later
+            (String::default(), String::default())
+        }
     }
 }
 
@@ -509,7 +558,7 @@ fn set_bc_font_size(tile: &mut Tile) {
     let char_len = tile.text.name.chars().count();
 
     tile.text.font_size = Some(8);
-    // Try to fit greatest font in the Rectangle
+    // Try to fit biggest font in the Rectangle
     for font in [24, 20, 16, 12, 8] {
         let char_width = get_bc_font_width(font);
         let str_width = char_width * char_len;
@@ -533,6 +582,24 @@ fn get_bc_font_width(font_size: usize) -> usize {
         _ => unreachable!("got font_size {}", font_size),
     }
 }
+
+fn center_text(tile: &mut Tile) {
+    let font_size = tile.text.font_size.unwrap();
+    let char_width = get_bc_font_width(font_size);
+    let char_len = tile.text.name.chars().count();
+
+    // If str goes beyond the Tile, clamp it's width
+    let str_width = (char_width * char_len).min(tile.dim.width);
+
+    // Text x, y relative to parent Tile (tile.dim + tile.text.dim)
+    tile.text.dim.x = (tile.dim.width - str_width) / 2;
+    // Assuming here font size describes amount of pixels,
+    // subtract from tile.dim.height to get amount of free space
+    // and div by 2 to have it vertically centered
+
+    tile.text.dim.y = (tile.dim.height - font_size) / 2;
+}
+
 fn render_to_bc(root: &Node, d: &Dimension) -> String {
     let (tiles, static_elements) = render_bc_widgets(&root);
 
@@ -728,13 +795,52 @@ mod test {
         ]);
         let welcome_page = v_layout([
             h_line(),
-            
+            h_layout([v_layout([
+                tile("21:37:07").with_format("%T"),
+                h_line(),
+                tile("02/09/21").with_format("%d/%m/%y"),
+            ])]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        let d = Dimension {
+            x: 0,
+            y: 0,
+            width: 296,
+            height: 128,
+        };
+
+        invalidate_dimensions(&mut gui, &d);
+
+        render_to_60fps(&gui, &d);
+
+        render_to_bc(&gui, &d);
+    }
+
+    #[test]
+    fn select_activity() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            v_line(),
             h_layout([
-                v_layout([
-                    tile("21:37:07").with_format("%T"),
-                    h_line(),
-                    tile("02/09/21").with_format("%d/%m/%y"),
-                ]),
+                v_layout([tile("Activity"), h_line(), tile("")]),
+                v_list([
+                    "Running",
+                    "Cycling",
+                    "Hiking",
+                    "Ind. Cycling",
+                    "Yoga",
+                    "Swimming",
+                ])
+                .with_font_size(16),
             ]),
         ]);
 
@@ -755,7 +861,7 @@ mod test {
     }
 
     #[test]
-    fn activity() {
+    fn select_running_workouts() {
         let status_bar = h_layout([
             tile("21:37").with_format("%T"),
             v_line(),
@@ -767,55 +873,7 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([
-                    tile("Activity"),
-                    h_line(),
-                    tile("")
-                ]),
-                v_layout([
-                    tile("Running").with_font_size(16),
-                    tile("Cycling").with_font_size(16),
-                    tile("Hiking").with_font_size(16),
-                    tile("In. Cycling").with_font_size(16),
-                    tile("Yoga").with_font_size(16),
-                ]),
-            ]),
-        ]);
-
-        let mut gui = h_split(status_bar, 0.101, welcome_page);
-
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
-
-        invalidate_dimensions(&mut gui, &d);
-
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
-    }
-
-    #[test]
-    fn activity_running() {
-        let status_bar = h_layout([
-            tile("21:37").with_format("%T"),
-            v_line(),
-            tile("GPS 3D").with_format("GPS %1d"),
-            v_line(),
-            tile("02/09/21").with_format("%d/%m/%y"),
-        ]);
-        let welcome_page = v_layout([
-            h_line(),
-            v_line(),
-            h_layout([
-                v_layout([
-                    tile("Running"),
-                    h_line(),
-                    tile("Workouts")
-                ]),
+                v_layout([tile("Running"), h_line(), tile("Workouts")]),
                 v_layout([
                     tile("5k").with_font_size(16),
                     tile("10k").with_font_size(16),
@@ -855,15 +913,8 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([
-                    tile("Running"),
-                    h_line(),
-                    tile("Cooper Test")
-                ]),
-                v_layout([
-                    tile("Do It"),
-                    tile("View"),
-                ]),
+                v_layout([tile("Running"), h_line(), tile("Cooper Test")]),
+                v_layout([tile("Do It"), tile("View")]),
             ]),
         ]);
 
@@ -895,22 +946,18 @@ mod test {
         let welcome_page = v_layout([
             h_line(),
             h_split(
-                v_layout([
-                    tile("Cooper Test"),
-                    h_line(),
-                    
-                ]), 0.2,
+                v_layout([tile("Cooper Test"), h_line()]),
+                0.2,
                 v_layout([
                     tile("Step 1: Warmup").with_font_size(12),
                     tile("Step 2: Run for your life for 12 mins").with_font_size(12),
                     tile("Step 3: Note the distance").with_font_size(12),
                     tile("Step 4: Look at the table").with_font_size(12),
                     // TODO: all steps disappear after adding another element
-                    // Because for .60fps font of size 16 does not fit in a 
+                    // Because for .60fps font of size 16 does not fit in a
                     // rect of height 18 and clips the text
                     // tile("Step 5"),
                 ]),
-                
             ),
         ]);
 

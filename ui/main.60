@@ -4,226 +4,248 @@ MainWindow := Window{
         background: red;
 
         Rectangle {
-            x: 0phx;
-            y: 0phx;
-            width: 98phx;
-            height: 12phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 2phx;
-                width: 100%;
-                height: 100%;
-                text: "21:37";
-                font-size: 8phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 98phx;
-            y: 0phx;
-            width: 98phx;
-            height: 12phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 2phx;
-                width: 100%;
-                height: 100%;
-                text: "GPS 3D";
-                font-size: 8phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 196phx;
-            y: 0phx;
-            width: 98phx;
-            height: 12phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 2phx;
-                width: 100%;
-                height: 100%;
-                text: "02/09/21";
-                font-size: 8phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 0phx;
-            y: 12phx;
-            width: 148phx;
-            height: 58phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 17phx;
-                width: 100%;
-                height: 100%;
-                text: "Activity";
-                font-size: 24phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 0phx;
-            y: 70phx;
-            width: 148phx;
-            height: 58phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 17phx;
-                width: 100%;
-                height: 100%;
-                text: "";
-                font-size: 24phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 148phx;
-            y: 12phx;
-            width: 148phx;
-            height: 23phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 3phx;
-                width: 100%;
-                height: 100%;
-                text: "Running";
-                font-size: 16phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 148phx;
-            y: 35phx;
-            width: 148phx;
-            height: 23phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 3phx;
-                width: 100%;
-                height: 100%;
-                text: "Cycling";
-                font-size: 16phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 148phx;
-            y: 58phx;
-            width: 148phx;
-            height: 23phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 3phx;
-                width: 100%;
-                height: 100%;
-                text: "Hiking";
-                font-size: 16phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 148phx;
-            y: 81phx;
-            width: 148phx;
-            height: 23phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 3phx;
-                width: 100%;
-                height: 100%;
-                text: "In. Cycling";
-                font-size: 16phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        Rectangle {
-            x: 148phx;
-            y: 104phx;
-            width: 148phx;
-            height: 23phx;
-            background: whitesmoke;
-            border-color: black;
-            border-width: 0px;
-            Text {
-                //x: {x_text}phx;
-                y: 3phx;
-                width: 100%;
-                height: 100%;
-                text: "Yoga";
-                font-size: 16phx;
-                // That's the closest font to the one on BC display,
-                // still very different
-                font-family: "noto mono";
-                // vertical-alignment: center;
-                horizontal-alignment: center;
-            }
-        }
-        
+    x: 0phx;
+    y: 0phx;
+    width: 98phx;
+    height: 12phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 2phx;
+        width: 100%;
+        height: 100%;
+        text: "21:37";
+        font-size: 8phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 98phx;
+    y: 0phx;
+    width: 98phx;
+    height: 12phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 2phx;
+        width: 100%;
+        height: 100%;
+        text: "GPS 3D";
+        font-size: 8phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 196phx;
+    y: 0phx;
+    width: 98phx;
+    height: 12phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 2phx;
+        width: 100%;
+        height: 100%;
+        text: "02/09/21";
+        font-size: 8phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 0phx;
+    y: 12phx;
+    width: 148phx;
+    height: 58phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 17phx;
+        width: 100%;
+        height: 100%;
+        text: "Activity";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 0phx;
+    y: 70phx;
+    width: 148phx;
+    height: 58phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 17phx;
+        width: 100%;
+        height: 100%;
+        text: "";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 12phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Running";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 31phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Cycling";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 50phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Hiking";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 69phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Ind. Cycling";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 88phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Yoga";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 149phx;
+    y: 107phx;
+    width: 146phx;
+    height: 19phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 1phx;
+        width: 100%;
+        height: 100%;
+        text: "Swimming";
+        font-size: 16phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+
 
         Rectangle {
             x: 98phx;
