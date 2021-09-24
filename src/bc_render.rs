@@ -1,3 +1,5 @@
+use std::os::linux::raw;
+
 use crate::common::{Dimension, Node, Tile};
 
 fn render_bc_widgets(root: &Node) -> (String, String) {
@@ -79,9 +81,27 @@ display_->enqueueDraw(
                 line_height = dim.height
             ),
         ),
-        Node::VListWidget(_) => {
-            // TODO: implement later
-            (String::default(), String::default())
+        Node::VListWidget(list) => {
+            let raw_elements: Vec<_> = list.elements.iter().map(|tile| tile.text.name).collect();
+            // That magic in .replace is ... magic
+            let raw_elements = format!("{:?}", raw_elements).replace(&['[', ']'][..], "");
+            (
+                format!(
+                    r#"
+// CTOR
+VListWidget(display, {{{activities}}}, {{{x0}, {y0}, {x1}, {y1}}})
+
+
+"#,
+                    activities = raw_elements,
+                    x0 = list.dim.x + 1,
+                    y0 = list.dim.y + 1,
+                    x1 = list.dim.x + list.dim.width - 1,
+                    y1 = list.dim.y + list.dim.height - 1
+                    // TODO: set font size in ctor too
+                ),
+                String::default(),
+            )
         }
     }
 }
