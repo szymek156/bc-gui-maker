@@ -11,7 +11,8 @@ use crate::{
 mod bc_render;
 mod common;
 mod sixtyfps_render;
-mod mocks;
+mod mocks_sharp_mip_2in7;
+mod mocks_waveshare2in9;
 
 fn main() {
     bc_test_page();
@@ -197,12 +198,12 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([
-                    tile("02/09/21").with_format("%d/%m/%y"),
-                    tile("19:34:20").with_format("%T"),
+                    tile("02/09/21").with_format("%d/%m/%y").with_font_size(20),
+                    tile("19:34:20").with_format("%T").with_font_size(20),
                 ]),
                 v_layout([
-                    tile("in view / tracked"),
-                    tile("13 / 11").with_format("%d / %d").with_font_size(12),
+                    tile("in view: 13").with_format("in view: %d").with_font_size(20),
+                    tile("tracked: 11").with_format("tracked: %d").with_font_size(20),
                 ]),
             ]),
             // Current implementation of invalidate_dimensions
@@ -213,12 +214,10 @@ mod test {
             h_layout([
                 v_layout([
                     tile("23.19[*C]").with_format("%5.2f[*C]"),
-                    tile("133.94[m]").with_format("%5.2f[m]"),
+                    tile("8848.94[m]").with_format("%07.2f[m]"),
                 ]),
                 v_layout([
-                    tile("Hit button below"),
-                    tile("to calculate your"),
-                    tile("BMI"),
+                    tile(""),
                 ]),
             ]),
         ]);

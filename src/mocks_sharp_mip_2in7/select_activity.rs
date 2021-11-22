@@ -1,15 +1,33 @@
-
 #[cfg(test)]
 mod test {
-    use crate::{
-        bc_render::render_to_bc,
-        common::{
-            h_layout, h_line, h_split, invalidate_dimensions, tile, v_layout, v_line, v_list, Dimension,
-        },
-        sixtyfps_render::render_to_60fps,
-    };
+    use crate::{bc_render::render_to_bc, common::{
+            h_layout, h_line, h_split, invalidate_dimensions, tile, v_layout, v_line, v_list,
+            Dimension,
+        }, mocks_sharp_mip_2in7::common_params::display_dimension, sixtyfps_render::render_to_60fps};
 
     use super::*;
+
+    #[test]
+    fn activity_splash() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([h_line(), h_layout([tile("Activities")])]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+
+        invalidate_dimensions(&mut gui, &display_dimension);
+
+        render_to_60fps(&gui, &display_dimension);
+
+        render_to_bc(&gui, &display_dimension);
+    }
+
     #[test]
     fn select_activity() {
         let status_bar = h_layout([
@@ -38,18 +56,11 @@ mod test {
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 
     #[test]
@@ -65,31 +76,19 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("Running"), h_line(), tile("Workouts")]),
-                v_layout([
-                    tile("5k").with_font_size(16),
-                    tile("10k").with_font_size(16),
-                    tile("Half Marathon").with_font_size(16),
-                    tile("Marathon").with_font_size(16),
-                    tile("Cooper Test").with_font_size(16),
-                ]),
+                v_layout([tile("Workouts"), h_line(), tile("Running")]),
+                v_list(["5k", "10k", "Half Marathon", "Marathon", "Cooper Test"])
+                    .with_font_size(16),
             ]),
         ]);
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 
     #[test]
@@ -106,24 +105,17 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("Running"), h_line(), tile("Cooper Test")]),
-                v_layout([tile("Do It"), tile("View")]),
+                v_list(["Do It", "View"]).with_font_size(16),
             ]),
         ]);
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 
     #[test]
@@ -155,17 +147,42 @@ mod test {
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
+    }
 
-        render_to_bc(&gui, &d);
+    #[test]
+    fn activity_running_do_it() {
+        let status_bar = h_layout([
+            tile("21:37").with_format("%T"),
+            v_line(),
+            tile("GPS 3D").with_format("GPS %1d"),
+            v_line(),
+            tile("02/09/21").with_format("%d/%m/%y"),
+        ]);
+        let welcome_page = v_layout([
+            h_line(),
+            v_line(),
+            h_layout([
+                v_layout([tile("Running"), h_line(), tile("5k")]),
+                v_layout([
+                    tile("GPS 3D").with_font_size(16),
+                    h_line(),
+                    tile("Press OK").with_font_size(16),
+                    tile("to start").with_font_size(16),
+                ]),
+            ]),
+        ]);
+
+        let mut gui = h_split(status_bar, 0.101, welcome_page);
+
+        invalidate_dimensions(&mut gui, &display_dimension);
+
+        render_to_60fps(&gui, &display_dimension);
+
+        render_to_bc(&gui, &display_dimension);
     }
 }

@@ -52,6 +52,8 @@ pub struct Tile {
 pub struct List {
     // Dimension of whole element
     pub dim: Dimension,
+    // Size all elements share
+    pub font_size: Option<usize>,
     // Elements which user is able to select
     pub elements: Vec<Tile>,
     // If visible_elements is less than # of elements in total
@@ -177,6 +179,8 @@ impl Node {
                 self
             }
             Node::VListWidget(ref mut list) => {
+                list.font_size = Some(size);
+
                 let _: Vec<_> = list
                     .elements
                     .iter_mut()
@@ -184,6 +188,8 @@ impl Node {
                     .collect();
                 self
             }
+            // TODO: Node::V -> apply font size for all children
+
             _ => panic!("Cannot set font_size on {:?}", self),
         }
     }

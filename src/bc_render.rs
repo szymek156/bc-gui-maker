@@ -89,16 +89,16 @@ display_->enqueueDraw(
                 format!(
                     r#"
 // CTOR
-VListWidget(display, {{{activities}}}, {{{x0}, {y0}, {x1}, {y1}}})
+VListWidget(display, {{{activities}}}, Font{font}, {{{x0}, {y0}, {x1}, {y1}}})
 
 
 "#,
                     activities = raw_elements,
+                    font=list.font_size.unwrap(),
                     x0 = list.dim.x + 1,
                     y0 = list.dim.y + 1,
                     x1 = list.dim.x + list.dim.width - 1,
                     y1 = list.dim.y + list.dim.height - 1
-                    // TODO: set font size in ctor too
                 ),
                 String::default(),
             )
@@ -167,7 +167,7 @@ pub fn render_to_bc(root: &Node, d: &Dimension) -> String {
 
     void StatusView::drawStatic() {{
         display_->enqueueStaticDraw(
-            [](Paint &paint) {{
+            [&](Paint &paint) {{
             {static_elements}
             }},
             // Rectangle needs to cover whole widget area
