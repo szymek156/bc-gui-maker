@@ -21,8 +21,8 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("Paused"), h_line(), tile("")]),
-                v_list(["Resume", "Save", "Discard"]).with_font_size(19),
+                v_layout([tile("Paused").with_font_size(42), h_line(), tile("")]),
+                v_list(["Resume", "Save", "Discard"]).with_font_size(24),
             ]),
         ]);
 

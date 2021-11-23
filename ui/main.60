@@ -17,7 +17,7 @@ MainWindow := Window{
         width: 100%;
         height: 100%;
         text: "21:37";
-        font-size: 20phx;
+        font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -39,7 +39,7 @@ Rectangle {
         width: 100%;
         height: 100%;
         text: "GPS 3D";
-        font-size: 20phx;
+        font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -61,7 +61,7 @@ Rectangle {
         width: 100%;
         height: 100%;
         text: "02/09/21";
-        font-size: 20phx;
+        font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -73,16 +73,82 @@ Rectangle {
     x: 0phx;
     y: 24phx;
     width: 200phx;
-    height: 108phx;
+    height: 54phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 42phx;
+        y: 15phx;
         width: 100%;
         height: 100%;
-        text: "Workouts";
+        text: "02/09/21";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 0phx;
+    y: 78phx;
+    width: 200phx;
+    height: 54phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 15phx;
+        width: 100%;
+        height: 100%;
+        text: "19:34:19";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 200phx;
+    y: 24phx;
+    width: 200phx;
+    height: 54phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 15phx;
+        width: 100%;
+        height: 100%;
+        text: "in view: 13";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "noto mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 200phx;
+    y: 78phx;
+    width: 200phx;
+    height: 54phx;
+    background: whitesmoke;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 15phx;
+        width: 100%;
+        height: 100%;
+        text: "tracked: 11";
         font-size: 24phx;
         // That's the closest font to the one on BC display,
         // still very different
@@ -95,16 +161,16 @@ Rectangle {
     x: 0phx;
     y: 132phx;
     width: 200phx;
-    height: 108phx;
+    height: 54phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 42phx;
+        y: 15phx;
         width: 100%;
         height: 100%;
-        text: "Running";
+        text: "23.19[*C]";
         font-size: 24phx;
         // That's the closest font to the one on BC display,
         // still very different
@@ -114,20 +180,20 @@ Rectangle {
     }
 }
 Rectangle {
-    x: 201phx;
-    y: 24phx;
-    width: 198phx;
-    height: 43phx;
+    x: 0phx;
+    y: 186phx;
+    width: 200phx;
+    height: 54phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 11phx;
+        y: 15phx;
         width: 100%;
         height: 100%;
-        text: "5k";
-        font-size: 20phx;
+        text: "8848.94[m]";
+        font-size: 24phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -136,86 +202,20 @@ Rectangle {
     }
 }
 Rectangle {
-    x: 201phx;
-    y: 67phx;
-    width: 198phx;
-    height: 43phx;
+    x: 200phx;
+    y: 132phx;
+    width: 200phx;
+    height: 108phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 11phx;
+        y: 12phx;
         width: 100%;
         height: 100%;
-        text: "10k";
-        font-size: 20phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 201phx;
-    y: 110phx;
-    width: 198phx;
-    height: 43phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 11phx;
-        width: 100%;
-        height: 100%;
-        text: "Half Marathon";
-        font-size: 20phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 201phx;
-    y: 153phx;
-    width: 198phx;
-    height: 43phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 11phx;
-        width: 100%;
-        height: 100%;
-        text: "Marathon";
-        font-size: 20phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 201phx;
-    y: 196phx;
-    width: 198phx;
-    height: 43phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 11phx;
-        width: 100%;
-        height: 100%;
-        text: "Cooper Test";
-        font-size: 20phx;
+        text: "";
+        font-size: 83phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -256,7 +256,7 @@ Rectangle {
             x: 200phx;
             y: 27phx;
             width: 1phx;
-            height: 210phx;
+            height: 102phx;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -264,8 +264,17 @@ Rectangle {
         Rectangle {
             x: 13phx;
             y: 132phx;
-            width: 174phx;
+            width: 374phx;
             height: 1phx;
+            background: black;
+            border-color: black;
+            border-width: 0px;
+        }
+        Rectangle {
+            x: 200phx;
+            y: 135phx;
+            width: 1phx;
+            height: 102phx;
             background: black;
             border-color: black;
             border-width: 0px;

@@ -4,3 +4,4 @@ mod welcome;
 mod stats;
 mod running;
 mod activity_paused;
+mod health;

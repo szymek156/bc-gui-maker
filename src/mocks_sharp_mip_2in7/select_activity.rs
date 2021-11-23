@@ -78,7 +78,7 @@ mod test {
             h_layout([
                 v_layout([tile("Workouts"), h_line(), tile("Running")]),
                 v_list(["5k", "10k", "Half Marathon", "Marathon", "Cooper Test"])
-                    .with_font_size(19),
+                    .with_font_size(24),
             ]),
         ]);
 
@@ -105,7 +105,7 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("Running"), h_line(), tile("Cooper Test")]),
-                v_list(["Do It", "View"]).with_font_size(19),
+                v_list(["Do It", "View"]).with_font_size(24),
             ]),
         ]);
 
@@ -167,12 +167,12 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("Running"), h_line(), tile("5k")]),
+                v_layout([tile("Running"), h_line(), tile("Cooper Test")]),
                 v_layout([
-                    tile("GPS 3D").with_font_size(19),
+                    tile("GPS 3D").with_font_size(24),
                     h_line(),
-                    tile("Press OK").with_font_size(19),
-                    tile("to start").with_font_size(19),
+                    tile("Press OK").with_font_size(24),
+                    tile("to start").with_font_size(24),
                 ]),
             ]),
         ]);

@@ -9,7 +9,7 @@ mod test {
     #[test]
     fn welcome() {
         let status_bar = h_layout([
-            tile("21:37").with_format("%T"),
+            tile("21:37:43").with_format("%T"),
             v_line(),
             tile("GPS 3D").with_format("GPS %1d"),
             v_line(),
