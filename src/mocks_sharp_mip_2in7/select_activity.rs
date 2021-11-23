@@ -50,7 +50,7 @@ mod test {
                     "Yoga",
                     "Swimming",
                 ])
-                .with_font_size(16),
+                .with_font_size(19),
             ]),
         ]);
 
@@ -78,7 +78,7 @@ mod test {
             h_layout([
                 v_layout([tile("Workouts"), h_line(), tile("Running")]),
                 v_list(["5k", "10k", "Half Marathon", "Marathon", "Cooper Test"])
-                    .with_font_size(16),
+                    .with_font_size(19),
             ]),
         ]);
 
@@ -105,7 +105,7 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("Running"), h_line(), tile("Cooper Test")]),
-                v_list(["Do It", "View"]).with_font_size(16),
+                v_list(["Do It", "View"]).with_font_size(19),
             ]),
         ]);
 
@@ -133,10 +133,10 @@ mod test {
                 v_layout([tile("Cooper Test"), h_line()]),
                 0.2,
                 v_layout([
-                    tile("Step 1: Warmup").with_font_size(12),
-                    tile("Step 2: Run for your life for 12 mins").with_font_size(12),
-                    tile("Step 3: Note the distance").with_font_size(12),
-                    tile("Step 4: Look at the table").with_font_size(12),
+                    tile("Step 1: Warmup").with_font_size(19),
+                    tile("Step 2: Run for your life for 12 mins").with_font_size(19),
+                    tile("Step 3: Note the distance").with_font_size(19),
+                    tile("Step 4: Look at the table").with_font_size(19),
                     // TODO: all steps disappear after adding another element
                     // Because for .60fps font of size 16 does not fit in a
                     // rect of height 18 and clips the text
@@ -169,10 +169,10 @@ mod test {
             h_layout([
                 v_layout([tile("Running"), h_line(), tile("5k")]),
                 v_layout([
-                    tile("GPS 3D").with_font_size(16),
+                    tile("GPS 3D").with_font_size(19),
                     h_line(),
-                    tile("Press OK").with_font_size(16),
-                    tile("to start").with_font_size(16),
+                    tile("Press OK").with_font_size(19),
+                    tile("to start").with_font_size(19),
                 ]),
             ]),
         ]);

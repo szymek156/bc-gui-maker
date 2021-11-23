@@ -25,33 +25,33 @@ mod test {
         let welcome_page = h_layout([
             v_layout([
                 v_layout([
-                    tile("pace").with_font_size(16),
-                    tile("10.20").with_format("%.2f").with_font_size(20),
+                    tile("pace").with_font_size(19),
+                    tile("10.20").with_format("%.2f").with_font_size(19),
                 ]),
                 h_line(),
                 v_layout([
-                    // tile("stride").with_font_size(16),
-                    // tile("1.23").with_format("%.2f").with_font_size(20),
+                    // tile("stride").with_font_size(19),
+                    // tile("1.23").with_format("%.2f").with_font_size(19),
                     h_layout([
-                        tile("lap time").with_font_size(16),
-                        tile("02:03:04").with_format("%.2f").with_font_size(16),
+                        tile("lap time").with_font_size(19),
+                        tile("02:03:04").with_format("%.2f").with_font_size(19),
                     ]),
                     h_layout([
-                        tile("lap dist").with_font_size(16),
-                        tile("21.37").with_format("%.2f").with_font_size(20),
+                        tile("lap dist").with_font_size(19),
+                        tile("21.37").with_format("%.2f").with_font_size(19),
                     ]),
                 ]),
             ]),
             v_line(),
             v_layout([
                 v_layout([
-                    tile("HR zone").with_font_size(16),
-                    tile("2.79").with_format("%.2f").with_font_size(20),
+                    tile("HR zone").with_font_size(19),
+                    tile("2.79").with_format("%.2f").with_font_size(19),
                 ]),
                 h_line(),
                 v_layout([
-                    tile("cadence").with_font_size(16),
-                    tile("158").with_format("%3d").with_font_size(20),
+                    tile("cadence").with_font_size(19),
+                    tile("158").with_format("%3d").with_font_size(19),
                 ]),
             ]),
         ]);
@@ -77,25 +77,25 @@ mod test {
         let welcome_page = h_layout([
             v_layout([
                 v_layout([
-                    tile("total dist").with_font_size(16),
-                    tile("10.20").with_format("%.2f").with_font_size(20),
+                    tile("total dist").with_font_size(19),
+                    tile("10.20").with_format("%.2f").with_font_size(19),
                 ]),
                 h_line(),
                 v_layout([
-                    tile("lap dist").with_font_size(16),
-                    tile("5.20").with_format("%.2f").with_font_size(20),
+                    tile("lap dist").with_font_size(19),
+                    tile("5.20").with_format("%.2f").with_font_size(19),
                 ]),
             ]),
             v_line(),
             v_layout([
                 v_layout([
-                    tile("total time").with_font_size(16),
-                    tile("02:12:20").with_format("%T").with_font_size(20),
+                    tile("total time").with_font_size(19),
+                    tile("02:12:20").with_format("%T").with_font_size(19),
                 ]),
                 h_line(),
                 v_layout([
-                    tile("lap time").with_font_size(16),
-                    tile("01:12:20").with_format("%T").with_font_size(20),
+                    tile("lap time").with_font_size(19),
+                    tile("01:12:20").with_format("%T").with_font_size(19),
                 ]),
             ]),
         ]);
@@ -151,7 +151,7 @@ mod test {
             "run 5.00 2/5",
             "cool down 2 minutes",
         ])
-        .with_font_size(16)]);
+        .with_font_size(19)]);
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
@@ -183,7 +183,7 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("Paused"), h_line()]),
-                v_list(["Resume", "Skip Step", "Save", "Discard"]).with_font_size(16),
+                v_list(["Resume", "Skip Step", "Save", "Discard"]).with_font_size(19),
             ]),
         ]);
 

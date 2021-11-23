@@ -1,13 +1,9 @@
 #[cfg(test)]
 mod test {
-    use crate::{
-        bc_render::render_to_bc,
-        common::{
+    use crate::{bc_render::render_to_bc, common::{
             h_layout, h_line, h_split, invalidate_dimensions, tile, v_layout, v_line, v_list,
             Dimension,
-        },
-        sixtyfps_render::render_to_60fps,
-    };
+        }, mocks_sharp_mip_2in7::common_params::display_dimension, sixtyfps_render::render_to_60fps};
 
     use super::*;
     #[test]
@@ -30,17 +26,10 @@ mod test {
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 400,
-            height: 256,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 }

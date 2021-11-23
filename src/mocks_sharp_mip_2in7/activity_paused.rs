@@ -22,7 +22,7 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([tile("Paused"), h_line(), tile("")]),
-                v_list(["Resume", "Save", "Discard"]).with_font_size(16),
+                v_list(["Resume", "Save", "Discard"]).with_font_size(19),
             ]),
         ]);
 

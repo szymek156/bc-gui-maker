@@ -58,7 +58,7 @@ mod test {
                     "Hiking",
                     "Ind. Cycling",
                 ])
-                .with_font_size(16),
+                .with_font_size(19),
             ]),
         ]);
 
@@ -93,10 +93,10 @@ mod test {
                 v_layout([tile("Stats for: workout type"), h_line()]),
                 0.2,
                 v_layout([
-                    tile("All time:Run for your life for 12 mins").with_font_size(12),
-                    tile("5k: 50min").with_font_size(12),
-                    tile("10k: 4hrs").with_font_size(12),
-                    tile("Half M: 2 days 4hrs").with_font_size(12),
+                    tile("All time:Run for your life for 12 mins").with_font_size(19),
+                    tile("5k: 50min").with_font_size(19),
+                    tile("10k: 4hrs").with_font_size(19),
+                    tile("Half M: 2 days 4hrs").with_font_size(19),
                     // TODO: all steps disappear after adding another element
                     // Because for .60fps font of size 16 does not fit in a
                     // rect of height 18 and clips the text

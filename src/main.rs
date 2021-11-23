@@ -51,7 +51,7 @@ fn bc_test_page() {
             ]),
             v_layout([
                 tile("in view / tracked"),
-                tile("13 / 11").with_format("%d / %d").with_font_size(12),
+                tile("13 / 11").with_format("%d / %d").with_font_size(19),
             ]),
         ]),
         // Current implementation of invalidate_dimensions
@@ -198,12 +198,12 @@ mod test {
             v_line(),
             h_layout([
                 v_layout([
-                    tile("02/09/21").with_format("%d/%m/%y").with_font_size(20),
-                    tile("19:34:20").with_format("%T").with_font_size(20),
+                    tile("02/09/21").with_format("%d/%m/%y").with_font_size(19),
+                    tile("19:34:19").with_format("%T").with_font_size(19),
                 ]),
                 v_layout([
-                    tile("in view: 13").with_format("in view: %d").with_font_size(20),
-                    tile("tracked: 11").with_format("tracked: %d").with_font_size(20),
+                    tile("in view: 13").with_format("in view: %d").with_font_size(19),
+                    tile("tracked: 11").with_format("tracked: %d").with_font_size(19),
                 ]),
             ]),
             // Current implementation of invalidate_dimensions

@@ -5,5 +5,5 @@ pub const display_dimension : Dimension = Dimension{
     x: 0,
     y: 0,
     width: 400,
-    height: 256,
+    height: 240,
 };

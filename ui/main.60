@@ -1,23 +1,23 @@
 MainWindow := Window{
         width: 400phx;
-        height: 256phx;
+        height: 240phx;
         background: red;
 
         Rectangle {
     x: 0phx;
     y: 0phx;
     width: 133phx;
-    height: 25phx;
+    height: 24phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 0phx;
+        y: 2phx;
         width: 100%;
         height: 100%;
         text: "21:37";
-        font-size: 24phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -29,17 +29,17 @@ Rectangle {
     x: 133phx;
     y: 0phx;
     width: 133phx;
-    height: 25phx;
+    height: 24phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 0phx;
+        y: 2phx;
         width: 100%;
         height: 100%;
         text: "GPS 3D";
-        font-size: 24phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -51,7 +51,7 @@ Rectangle {
     x: 266phx;
     y: 0phx;
     width: 133phx;
-    height: 25phx;
+    height: 24phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
@@ -71,15 +71,15 @@ Rectangle {
 }
 Rectangle {
     x: 0phx;
-    y: 25phx;
+    y: 24phx;
     width: 200phx;
-    height: 115phx;
+    height: 108phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 45phx;
+        y: 42phx;
         width: 100%;
         height: 100%;
         text: "Workouts";
@@ -93,15 +93,15 @@ Rectangle {
 }
 Rectangle {
     x: 0phx;
-    y: 140phx;
+    y: 132phx;
     width: 200phx;
-    height: 115phx;
+    height: 108phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 45phx;
+        y: 42phx;
         width: 100%;
         height: 100%;
         text: "Running";
@@ -115,19 +115,19 @@ Rectangle {
 }
 Rectangle {
     x: 201phx;
-    y: 25phx;
+    y: 24phx;
     width: 198phx;
-    height: 46phx;
+    height: 43phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 11phx;
         width: 100%;
         height: 100%;
         text: "5k";
-        font-size: 16phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -137,19 +137,19 @@ Rectangle {
 }
 Rectangle {
     x: 201phx;
-    y: 71phx;
+    y: 67phx;
     width: 198phx;
-    height: 46phx;
+    height: 43phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 11phx;
         width: 100%;
         height: 100%;
         text: "10k";
-        font-size: 16phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -159,19 +159,19 @@ Rectangle {
 }
 Rectangle {
     x: 201phx;
-    y: 117phx;
+    y: 110phx;
     width: 198phx;
-    height: 46phx;
+    height: 43phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 11phx;
         width: 100%;
         height: 100%;
         text: "Half Marathon";
-        font-size: 16phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -181,19 +181,19 @@ Rectangle {
 }
 Rectangle {
     x: 201phx;
-    y: 163phx;
+    y: 153phx;
     width: 198phx;
-    height: 46phx;
+    height: 43phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 11phx;
         width: 100%;
         height: 100%;
         text: "Marathon";
-        font-size: 16phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -203,19 +203,19 @@ Rectangle {
 }
 Rectangle {
     x: 201phx;
-    y: 209phx;
+    y: 196phx;
     width: 198phx;
-    height: 46phx;
+    height: 43phx;
     background: whitesmoke;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 11phx;
         width: 100%;
         height: 100%;
         text: "Cooper Test";
-        font-size: 16phx;
+        font-size: 20phx;
         // That's the closest font to the one on BC display,
         // still very different
         font-family: "noto mono";
@@ -229,7 +229,7 @@ Rectangle {
             x: 133phx;
             y: 3phx;
             width: 1phx;
-            height: 19phx;
+            height: 18phx;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -238,14 +238,14 @@ Rectangle {
             x: 266phx;
             y: 3phx;
             width: 1phx;
-            height: 19phx;
+            height: 18phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
             x: 13phx;
-            y: 25phx;
+            y: 24phx;
             width: 374phx;
             height: 1phx;
             background: black;
@@ -254,21 +254,22 @@ Rectangle {
         }
         Rectangle {
             x: 200phx;
-            y: 28phx;
+            y: 27phx;
             width: 1phx;
-            height: 225phx;
+            height: 210phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
         Rectangle {
             x: 13phx;
-            y: 140phx;
+            y: 132phx;
             width: 174phx;
             height: 1phx;
             background: black;
             border-color: black;
             border-width: 0px;
         }
-
+        
     }
+    

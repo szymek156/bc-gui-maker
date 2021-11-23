@@ -94,7 +94,7 @@ VListWidget(display, {{{activities}}}, Font{font}, {{{x0}, {y0}, {x1}, {y1}}})
 
 "#,
                     activities = raw_elements,
-                    font=list.font_size.unwrap(),
+                    font = list.font_size.unwrap(),
                     x0 = list.dim.x + 1,
                     y0 = list.dim.y + 1,
                     x1 = list.dim.x + list.dim.width - 1,
@@ -112,7 +112,7 @@ pub fn set_bc_font_size(tile: &mut Tile) {
 
     tile.text.font_size = Some(8);
     // Try to fit biggest font in the Rectangle
-    for font in [24, 20, 16, 12, 8] {
+    for font in [83, 56, 42, 31, 19] {
         let char_width = get_bc_font_width(font);
         let str_width = char_width * char_len;
 
@@ -127,11 +127,10 @@ pub fn set_bc_font_size(tile: &mut Tile) {
 /// Taken from the font source code.
 fn get_bc_font_width(font_size: usize) -> usize {
     match font_size {
-        8 => 5,
-        12 => 7,
-        16 => 11,
-        20 => 14,
-        24 => 17,
+        19 => 11,
+        31 => 18,
+        56 => 32,
+        83 => 48,
         _ => unreachable!("got font_size {}", font_size),
     }
 }
