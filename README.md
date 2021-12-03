@@ -21,9 +21,8 @@ display_->enqueueDraw(
         const int msg_size = 128;
         char message[msg_size];
 
-    snprintf(message, msg_size, "Paused");
-    paint.DrawStringAt(28, 57, message, &Font42, COLORED);
-
+        snprintf(message, msg_size, "Paused");
+        paint.DrawStringAt(28, 57, message, &Font42, COLORED);
 },
 {1, 25, 199, 131});
 
@@ -33,9 +32,8 @@ display_->enqueueDraw(
         const int msg_size = 128;
         char message[msg_size];
 
-    snprintf(message, msg_size, "");
-    paint.DrawStringAt(100, 158, message, &Font56, COLORED);
-
+        snprintf(message, msg_size, "");
+        paint.DrawStringAt(100, 158, message, &Font56, COLORED);
 },
 {1, 133, 199, 239});
 
