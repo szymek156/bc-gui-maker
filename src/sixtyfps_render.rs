@@ -7,7 +7,7 @@ fn render_60fps_rectangle(tile: &Tile) -> String {
     y: {y}phx;
     width: {width}phx;
     height: {height}phx;
-    background: whitesmoke;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {{
@@ -19,7 +19,7 @@ fn render_60fps_rectangle(tile: &Tile) -> String {
         font-size: {font_size}phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }}

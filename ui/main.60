@@ -8,7 +8,7 @@ MainWindow := Window{
     y: 0phx;
     width: 133phx;
     height: 24phx;
-    background: whitesmoke;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {
@@ -16,11 +16,11 @@ MainWindow := Window{
         y: 2phx;
         width: 100%;
         height: 100%;
-        text: "21:37";
+        text: "21:12";
         font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -30,7 +30,7 @@ Rectangle {
     y: 0phx;
     width: 133phx;
     height: 24phx;
-    background: whitesmoke;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {
@@ -42,7 +42,7 @@ Rectangle {
         font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -52,7 +52,7 @@ Rectangle {
     y: 0phx;
     width: 133phx;
     height: 24phx;
-    background: whitesmoke;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {
@@ -64,7 +64,7 @@ Rectangle {
         font-size: 19phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -73,152 +73,108 @@ Rectangle {
     x: 0phx;
     y: 24phx;
     width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
+    height: 108phx;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 15phx;
+        y: 33phx;
         width: 100%;
         height: 100%;
-        text: "02/09/21";
-        font-size: 24phx;
+        text: "Paused";
+        font-size: 42phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }
 }
 Rectangle {
     x: 0phx;
-    y: 78phx;
-    width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 15phx;
-        width: 100%;
-        height: 100%;
-        text: "19:34:19";
-        font-size: 24phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 200phx;
-    y: 24phx;
-    width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 15phx;
-        width: 100%;
-        height: 100%;
-        text: "in view: 13";
-        font-size: 24phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 200phx;
-    y: 78phx;
-    width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 15phx;
-        width: 100%;
-        height: 100%;
-        text: "tracked: 11";
-        font-size: 24phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 0phx;
-    y: 132phx;
-    width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 15phx;
-        width: 100%;
-        height: 100%;
-        text: "23.19[*C]";
-        font-size: 24phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 0phx;
-    y: 186phx;
-    width: 200phx;
-    height: 54phx;
-    background: whitesmoke;
-    border-color: black;
-    border-width: 0px;
-    Text {
-        //x: {x_text}phx;
-        y: 15phx;
-        width: 100%;
-        height: 100%;
-        text: "8848.94[m]";
-        font-size: 24phx;
-        // That's the closest font to the one on BC display,
-        // still very different
-        font-family: "noto mono";
-        // vertical-alignment: center;
-        horizontal-alignment: center;
-    }
-}
-Rectangle {
-    x: 200phx;
     y: 132phx;
     width: 200phx;
     height: 108phx;
-    background: whitesmoke;
+    background: silver;
     border-color: black;
     border-width: 0px;
     Text {
         //x: {x_text}phx;
-        y: 12phx;
+        y: 26phx;
         width: 100%;
         height: 100%;
         text: "";
-        font-size: 83phx;
+        font-size: 56phx;
         // That's the closest font to the one on BC display,
         // still very different
-        font-family: "noto mono";
+        font-family: "Ubuntu Mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 201phx;
+    y: 24phx;
+    width: 198phx;
+    height: 72phx;
+    background: silver;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 24phx;
+        width: 100%;
+        height: 100%;
+        text: "Resume";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "Ubuntu Mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 201phx;
+    y: 96phx;
+    width: 198phx;
+    height: 72phx;
+    background: silver;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 24phx;
+        width: 100%;
+        height: 100%;
+        text: "Save";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "Ubuntu Mono";
+        // vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+}
+Rectangle {
+    x: 201phx;
+    y: 168phx;
+    width: 198phx;
+    height: 72phx;
+    background: silver;
+    border-color: black;
+    border-width: 0px;
+    Text {
+        //x: {x_text}phx;
+        y: 24phx;
+        width: 100%;
+        height: 100%;
+        text: "Discard";
+        font-size: 24phx;
+        // That's the closest font to the one on BC display,
+        // still very different
+        font-family: "Ubuntu Mono";
         // vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -256,7 +212,7 @@ Rectangle {
             x: 200phx;
             y: 27phx;
             width: 1phx;
-            height: 102phx;
+            height: 210phx;
             background: black;
             border-color: black;
             border-width: 0px;
@@ -264,17 +220,8 @@ Rectangle {
         Rectangle {
             x: 13phx;
             y: 132phx;
-            width: 374phx;
+            width: 174phx;
             height: 1phx;
-            background: black;
-            border-color: black;
-            border-width: 0px;
-        }
-        Rectangle {
-            x: 200phx;
-            y: 135phx;
-            width: 1phx;
-            height: 102phx;
             background: black;
             border-color: black;
             border-width: 0px;

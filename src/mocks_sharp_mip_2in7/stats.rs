@@ -6,6 +6,7 @@ mod test {
             h_layout, h_line, h_split, invalidate_dimensions, tile, v_layout, v_line, v_list,
             Dimension,
         },
+        mocks_sharp_mip_2in7::common_params::display_dimension,
         sixtyfps_render::render_to_60fps,
     };
 
@@ -24,18 +25,11 @@ mod test {
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 
     #[test]
@@ -51,31 +45,18 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("Stats"), h_line(), tile("")]),
-                v_list([
-                    "Running",
-                    "Cycling",
-                    "Hiking",
-                    "Ind. Cycling",
-                ])
-                .with_font_size(19),
+                v_layout([tile("Stats").with_font_size(42), h_line(), tile("")]),
+                v_list(["Running", "Cycling", "Hiking", "Ind. Cycling"]).with_font_size(24),
             ]),
         ]);
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
 
     #[test]
@@ -93,10 +74,10 @@ mod test {
                 v_layout([tile("Stats for: workout type"), h_line()]),
                 0.2,
                 v_layout([
-                    tile("All time:Run for your life for 12 mins").with_font_size(19),
-                    tile("5k: 50min").with_font_size(19),
-                    tile("10k: 4hrs").with_font_size(19),
-                    tile("Half M: 2 days 4hrs").with_font_size(19),
+                    tile("All time:").with_font_size(24),
+                    tile("5k: 50min").with_font_size(24),
+                    tile("10k: 4hrs").with_font_size(24),
+                    tile("Half M: 2 days 4hrs").with_font_size(24),
                     // TODO: all steps disappear after adding another element
                     // Because for .60fps font of size 16 does not fit in a
                     // rect of height 18 and clips the text
@@ -107,18 +88,10 @@ mod test {
 
         let mut gui = h_split(status_bar, 0.101, welcome_page);
 
-        let d = Dimension {
-            x: 0,
-            y: 0,
-            width: 296,
-            height: 128,
-        };
+        invalidate_dimensions(&mut gui, &display_dimension);
 
-        invalidate_dimensions(&mut gui, &d);
+        render_to_60fps(&gui, &display_dimension);
 
-        render_to_60fps(&gui, &d);
-
-        render_to_bc(&gui, &d);
+        render_to_bc(&gui, &display_dimension);
     }
-
 }

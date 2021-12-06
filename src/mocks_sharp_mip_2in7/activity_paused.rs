@@ -11,7 +11,7 @@ mod test {
     #[test]
     fn activity_paused() {
         let status_bar = h_layout([
-            tile("21:37").with_format("%T"),
+            tile("21:12").with_format("%T"),
             v_line(),
             tile("GPS 3D").with_format("GPS %1d"),
             v_line(),

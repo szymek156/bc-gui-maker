@@ -76,7 +76,7 @@ mod test {
             h_line(),
             v_line(),
             h_layout([
-                v_layout([tile("Workouts"), h_line(), tile("Running")]),
+                v_layout([tile("Workouts"), h_line(), tile("Running").with_font_size(31)]),
                 v_list(["5k", "10k", "Half Marathon", "Marathon", "Cooper Test"])
                     .with_font_size(24),
             ]),

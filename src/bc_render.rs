@@ -112,7 +112,7 @@ pub fn set_bc_font_size(tile: &mut Tile) {
 
     tile.text.font_size = Some(8);
     // Try to fit biggest font in the Rectangle
-    for font in [83, 56, 42, 31, 24, 19] {
+    for font in [56, 42, 31, 24, 19] {
         let char_width = get_bc_font_width(font);
         let str_width = char_width * char_len;
 
@@ -132,7 +132,6 @@ fn get_bc_font_width(font_size: usize) -> usize {
         31 => 18,
         42 => 24,
         56 => 32,
-        83 => 48,
         _ => unreachable!("got font_size {}", font_size),
     }
 }
