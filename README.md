@@ -1,7 +1,7 @@
 # bc-gui-maker
 Quick And Dirty GUI generator for my [embedded project](https://github.com/szymek156/bike_computer_esp32)
 1) You declare GUI layout
-```
+```rust
 let welcome_page = v_layout([
             h_line(),
             v_line(),
@@ -12,7 +12,7 @@ let welcome_page = v_layout([
         ]);
 ```
 2) Application calculates font sizes, coordinates of GUI elements and dumps it to the C++ code (so you don't have to write it anymore!)
-```
+```c++
 // Following code is generated automagically,
 // don't bother understand it.
 // Paused
