@@ -5,3 +5,4 @@ mod stats;
 mod running;
 mod activity_paused;
 mod health;
+mod bluetooth;
